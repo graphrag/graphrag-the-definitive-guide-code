@@ -6,7 +6,7 @@ from neo4j import GraphDatabase
 from graphrag_retrievers import GraphRAGApp
 
 # Load environment variables
-load_dotenv()
+load_dotenv("graphrag-book.env")
 
 # Neo4j connection (with error handling)
 @st.cache_resource

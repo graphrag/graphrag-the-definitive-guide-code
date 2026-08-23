@@ -1,1 +1,15 @@
 graphrag.env
+graphrag-book.env
+.env
+*.env
+!*.env.example
+
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Local data stores / OS noise
+chroma_db/
+.DS_Store

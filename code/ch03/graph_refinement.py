@@ -4,7 +4,7 @@ from neo4j import GraphDatabase
 from dotenv import load_dotenv
 
 # Load environment variables
-load_dotenv()
+load_dotenv("graphrag-book.env")
 
 # Neo4j connection
 URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")

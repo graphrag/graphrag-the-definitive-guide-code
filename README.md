@@ -63,7 +63,7 @@ data/
 ### Prerequisites
 
 - **Python 3.10 or newer.** The repository does not pin a version; 3.10 is the floor required by the current `neo4j` Python driver (v6.x).
-- **[uv](https://docs.astral.sh/uv/)** — every `run_*.sh` script in this repo uses `uv`, and `uvx` must be on your `PATH` for Chapter 8's MCP client, which launches the Neo4j MCP server with `uvx neo4j-mcp-server`.
+- **[uv](https://docs.astral.sh/uv/)** — every `run_*.sh` script in this repo uses `uv`, and `uvx` must be on your `PATH` for the MCP clients in Chapter 8 and Chapter 12, which both launch the Neo4j MCP server with `uvx neo4j-mcp-server` (`uvx` downloads the `neo4j-mcp-server` package on first use, so the first run needs network access).
 - An **OpenAI API key**.
 - A **Neo4j instance** for chapters 3, 8, 9, 10 and 12 (see [Setting up Neo4j Aura](#setting-up-neo4j-aura)). Chapter 2 needs no database — it uses a local ChromaDB store.
 
@@ -73,9 +73,8 @@ Dependencies are declared per chapter, and the mechanism differs by chapter:
 
 | Chapter | How to install |
 |---------|----------------|
-| ch02, ch03, ch08, ch09 | `uv pip install -r requirements.txt` inside the chapter folder |
-| ch12 | No requirements file; `run_eval.sh` passes deps inline via `uv run --with openai --with neo4j --with python-dotenv --with pandas --with mcp` |
-| ch10 | No dependency file is checked in. Install manually: `uv pip install neo4j openai pandas numpy pydantic tiktoken` |
+| ch02, ch03, ch08, ch09, ch10 | `uv pip install -r requirements.txt` inside the chapter folder |
+| ch12 | No requirements file; `run_eval.sh` passes deps inline via `uv run --with openai --with neo4j --with python-dotenv --with pandas --with pydantic --with mcp` |
 | ch04 | No runtime dependencies beyond `pydantic` if you want to import `onto-as-pydantic.py`; the other files are ontology artifacts |
 
 A single shared virtual environment works for all chapters:
@@ -87,7 +86,7 @@ source .venv/bin/activate
 
 ### Environment variables
 
-Create a `graphrag-book.env` file in the chapter folder you are running (you can use `graphrag-book.env.example` in this repo, and no `.gitignore` — do not commit your `.env`).
+Create a `graphrag-book.env` file in the chapter folder you are running — copy `graphrag-book.env.example` from the repository root and fill it in. Every chapter uses that same filename, either through `load_dotenv("graphrag-book.env")` or through `uv run --env-file graphrag-book.env`. The `.gitignore` already excludes `*.env`, so your filled-in copy will not be committed.
 
 ```bash
 OPENAI_API_KEY=sk-...
@@ -101,15 +100,12 @@ Optional variables used by individual chapters:
 | Variable | Used by | Default in code |
 |----------|---------|-----------------|
 | `NEO4J_DATABASE` | ch08, ch09 | `neo4j` |
-| `NEO4J_READ_ONLY` | ch08 | — |
-| `OPENAI_MODEL` | ch08, ch09 | — |
+| `NEO4J_READ_ONLY` | ch08 | `true` |
+| `OPENAI_MODEL` | ch03, ch08, ch09 | `gpt-5` |
 | `JUDGE_MODEL` | ch12 | `gpt-5` |
 | `TARGET_MODEL` | ch12 | `gpt-5.4-mini` |
 
-Two caveats worth knowing before you debug a "missing credentials" error:
-
-- **Chapter 3 is split across two filenames.** `lexical_graph.py`, `structured_import.py`, and `entity_extraction.py` call `load_dotenv("graphrag-book.env")`, while `app_graphrag.py`, `graphrag_retrievers.py`, and `graph_refinement.py` call bare `load_dotenv()` (which reads `.env`). The simplest fix is to create both files, or symlink one to the other.
-- **Chapters 10 and 12** do not call `load_dotenv()` at all — their shell scripts pass `uv run --env-file .env`, so the `.env` file is mandatory there.
+Chapters 10 and 12 never call `load_dotenv()` themselves — their shell scripts pass `uv run --env-file graphrag-book.env`, so the file is mandatory there rather than optional.
 
 All paths in the scripts are relative, and the shell scripts do not `cd`. **Always run them from inside the chapter folder.**
 
@@ -121,8 +117,8 @@ Each chapter that needs setup ships a shell script; the interactive apps are Str
 # Chapter 2 — basic RAG (no database required)
 cd code/ch02
 uv pip install -r requirements.txt
-uv run python rag_ingest.py ../../data/ch02/
-uv run streamlit run rag_app.py
+uv run --env-file graphrag-book.env python rag_ingest.py ../../data/ch02/
+uv run --env-file graphrag-book.env streamlit run rag_app.py
 
 # Chapter 3 — build the graph, then chat against it
 cd code/ch03
@@ -151,20 +147,18 @@ bash run_import.sh                         # loads the ch08 graph the agent benc
 bash run_eval.sh
 ```
 
-Note that `code/ch02/run_rag.sh` begins with an active `export OPENAI_API_KEY="your_openai_api_key_here"` line — edit or delete it before sourcing the script, or it will overwrite a key you already have in your environment.
-
 ## Setting up Neo4j Aura
 
 Aura is Neo4j's managed cloud service and has a free tier that is enough for the book's examples.
 
 1. Go to **[console.neo4j.io](https://console.neo4j.io)** and sign up (Google/GitHub/email — no credit card needed for the free tier).
 2. Choose **Create instance** and pick the **AuraDB Free** instance type, then a region near you. Provisioning takes a couple of minutes.
-3. When the instance is created, Aura shows the generated password and offers a **credentials file** (`Neo4j-<instance-id>-Created-<date>.txt`) to download. **Download it now — the password is displayed exactly once and cannot be recovered.** If you lose it, you must reset the password from the instance's settings. Rename the file to `graphrag.env`.
+3. When the instance is created, Aura shows the generated password and offers a **credentials file** (`Neo4j-<instance-id>-Created-<date>.txt`) to download. **Download it now — the password is displayed exactly once and cannot be recovered.** If you lose it, you must reset the password from the instance's settings. Copy its values into your `graphrag-book.env` file.
 4. Wait for the instance status to turn **Running**.
 
 The credentials file maps directly onto the environment variables the code expects in `graphrag-book.env`:
 
-| Credentials file field | `.env` variable |
+| Credentials file field | `graphrag-book.env` variable |
 |------------------------|-----------------|
 | `NEO4J_URI` (`neo4j+s://<id>.databases.neo4j.io`) | `NEO4J_URI` |
 | `NEO4J_USERNAME` (always `neo4j`) | `NEO4J_USERNAME` |

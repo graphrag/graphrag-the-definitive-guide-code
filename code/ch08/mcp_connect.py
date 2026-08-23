@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
-load_dotenv()
+load_dotenv("graphrag-book.env")
 
 MCP_ENV = {
     **os.environ,

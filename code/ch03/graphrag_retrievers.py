@@ -6,7 +6,7 @@ from neo4j import GraphDatabase
 import openai
 
 # Load environment variables
-load_dotenv()
+load_dotenv("graphrag-book.env")
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # Neo4j connection

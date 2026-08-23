@@ -12,7 +12,7 @@ from neo4j_agent_memory.config.settings import (
     EmbeddingConfig,
 )
 
-load_dotenv()
+load_dotenv("graphrag-book.env")
 
 
 # OMG's six existing entity types (see chapter 3). These replace the library's
