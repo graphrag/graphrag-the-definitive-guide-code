@@ -1,0 +1,7 @@
+neo4j
+openai
+streamlit
+python-dotenv
+mcp
+pandas
+neo4j-agent-memory[all]>=0.2.0

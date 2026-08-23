@@ -1,0 +1,7 @@
+neo4j
+chromadb
+openai
+streamlit
+python-dotenv
+pandas
+# tiktoken

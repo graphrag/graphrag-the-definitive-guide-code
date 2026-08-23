@@ -1,0 +1,78 @@
+@prefix :        <http://example.org/aviation#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+
+#################################################################
+# Ontology header
+#################################################################
+
+:aviation-ontology a owl:Ontology ;
+  rdfs:label "Example Aviation Ontology" ;
+  rdfs:comment "Ontology defining Aircraft, Airport and the OPERATES_AT relationship." .
+
+#################################################################
+# Classes
+#################################################################
+
+:Aircraft a owl:Class ;
+  rdfs:label "Aircraft" ;
+  rdfs:comment "A physical airplane asset." .
+
+:Airport a owl:Class ;
+  rdfs:label "Airport" ;
+  rdfs:comment "An airport where aircraft operate." .
+
+#################################################################
+# Object properties
+#################################################################
+
+:operatesAt a owl:ObjectProperty , owl:FunctionalProperty ;
+  rdfs:label "operates at" ;
+  rdfs:comment "Relates an Aircraft to the Airport at which it operates. MANY_TO_ONE (many Aircraft -> one Airport)." ;
+  rdfs:domain :Aircraft ;
+  rdfs:range  :Airport .
+
+# Optional inverse property (not strictly required, but often handy)
+:hasOperatingAircraft a owl:ObjectProperty ;
+  rdfs:label "has operating aircraft" ;
+  rdfs:domain :Airport ;
+  rdfs:range  :Aircraft ;
+  owl:inverseOf :operatesAt .
+
+#################################################################
+# Datatype properties (mirroring your JSON schema)
+#################################################################
+
+:aircraftId a owl:DatatypeProperty ;
+  rdfs:label "aircraft ID" ;
+  rdfs:domain :Aircraft ;
+  rdfs:range xsd:string .
+
+:modelNumber a owl:DatatypeProperty ;
+  rdfs:label "model number" ;
+  rdfs:domain :Aircraft ;
+  rdfs:range xsd:string .
+
+:registrationDate a owl:DatatypeProperty ;
+  rdfs:label "registration date" ;
+  rdfs:domain :Aircraft ;
+  rdfs:range xsd:dateTime .
+
+:airportCode a owl:DatatypeProperty ;
+  rdfs:label "airport code" ;
+  rdfs:domain :Airport ;
+  rdfs:range xsd:string .
+
+:city a owl:DatatypeProperty ;
+  rdfs:label "city" ;
+  rdfs:domain :Airport ;
+  rdfs:range xsd:string .
+
+# Very simple geopoint as string or WKT – adapt to your geospatial stack
+:location a owl:DatatypeProperty ;
+  rdfs:label "location" ;
+  rdfs:comment "Geospatial location of the airport (e.g., WKT literal)." ;
+  rdfs:domain :Airport ;
+  rdfs:range xsd:string .

@@ -1,0 +1,6 @@
+neo4j
+openai
+streamlit
+python-dotenv
+mcp
+pandas

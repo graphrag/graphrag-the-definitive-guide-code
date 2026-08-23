@@ -1,0 +1,93 @@
+Question 1:: What skills does Emily Johnson have?
+
+Vector-based RAG Answer::
+Emily Johnson has skills in the following areas:
+
+- Conversational AI
+- Intelligent Automation
+- Natural language processing (NLP)
+- Dialogue management
+- AI governance
+- Designing and implementing AI-powered conversation systems, virtual assistants, and process automation solutions
+- NLP development
+- Document processing
+- Conversational interfaces
+- Natural language interface
+- Query processing
+- Dialogue design
+
+She is recognized for delivering innovative conversational experiences that enhance customer engagement and operational efficiency.
+
+GraphRAG Answer::
+Emily Johnson has the following skills:
+
+- GraphRAG
+- Natural Language Processing
+- Large Language Models
+- AI Ethics
+- Conversational AI
+- Voice User Interfaces
+- Dialogue Management
+- Dialogue Design
+- Natural Language Interface
+- Query Processing
+
+Question 2:: Which consultants have experience with healthcare clients?
+
+Vector-based RAG Answer::
+Based on the provided context, the following consultants have experience with healthcare clients:
+
+- Thomas Miller (Healthcare Technology): He served as Project Lead and Healthcare SME on healthcare technology projects, including EHR integration, clinical workflows, and regulatory requirements.
+- Benjamin Okonkwo (Data Engineering): Participated in a healthcare client project as the Data Architecture lead, responsible for data platform design and integration architecture.
+- Jason Chen (Artificial Intelligence & Machine Learning): Involved in AI/ML implementation for healthcare, including predictive models and clinical analytics.
+
+Additionally, the context mentions consultants who have led EHR implementations, healthcare analytics strategies, and population health management for healthcare systems and academic medical centers (though individual names are not always specified in those instances).
+Specifically, Thomas Miller is named as having direct healthcare technology client experience.
+
+GraphRAG Answer::
+Based on the provided context, the following consultants have experience with healthcare clients:
+
+- Thomas Miller (EMP012): Identified as a Healthcare SME with expertise in healthcare technology, clinical workflows, regulatory requirements, and healthcare domain expertise. He has worked on multiple healthcare-related projects, including Electronic Health Records, Healthcare Interoperability, Telehealth, and Healthcare Compliance.
+- Benjamin Okonkwo (EMP024): Listed as responsible for Data Architecture and Data Engineering, with skills including data platform design, integration architecture, data governance, and experience working on projects involving healthcare clients.
+- Jason Chen (EMP008): Handled AI/ML Implementation with skills in clinical analytics, predictive models, and machine learning implementation, and has worked with healthcare clients such as Kaiser Permanente.
+
+These consultants have demonstrated experience and roles on projects for healthcare clients, using their domain knowledge and technical expertise as detailed in the context.
+
+Question 3:: What projects has Emily Johnson worked on that involved AWS?
+
+Vector-based RAG Answer::
+Based on the context provided, Emily Johnson has worked on a project that utilized AWS Lambda as part of a modern technology stack.
+However, the specific project name is not mentioned.
+Additionally, her professional background centers on conversational AI, NLP development, and conversational interfaces.
+
+Therefore, Emily Johnson has worked on projects involving AWS Lambda, but the precise project names or additional details are not specified in the available information.
+
+GraphRAG Answer::
+Based on the provided context, Emily Johnson has worked on the following projects, but the only specific technology associations related to AWS are:
+
+- She has worked on the following projects: PRJ003, PRJ016, PRJ019, PRJ030, PRJ031, and PRJ039.
+- Document 1 mentions that projects Emily Johnson was involved in utilized AWS Lambda as part of their technology stack.
+
+However, the context does not specify which exact projects out of those listed (PRJ003, PRJ016, PRJ019, PRJ030, PRJ031, PRJ039) specifically involved AWS services besides the general mention that AWS Lambda was used.
+
+Therefore, Emily Johnson has worked on projects where AWS Lambda was used.
+The specific project names are not tied directly to AWS in the provided context, but projects she worked on include PRJ003, PRJ016, PRJ019, PRJ030, PRJ031, and PRJ039.
+
+Question 4:: Which clients have we done cloud migration projects for?
+
+Vector-based RAG Answer::
+Based on the provided context, OMG Consulting has completed cloud migration projects for the following clients:
+
+1. Global Investment Partners (Financial Services sector)
+2. Regional Healthcare Provider (Healthcare sector)
+
+If you need more specific names or additional client details, please provide further context.
+
+GraphRAG Answer::
+Based on the provided context, OMG Consulting has completed cloud migration projects for the following clients:
+
+1. Global Investment Partners (Financial Services sector)
+2. A Regional Healthcare Provider (Healthcare sector)
+3. Major financial institutions (specific names not provided)
+
+Only Global Investment Partners and a Regional Healthcare Provider are directly referenced by name in the context.

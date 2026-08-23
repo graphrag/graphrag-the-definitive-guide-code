@@ -1,0 +1,28 @@
+employee_id,full_name,role,office_location,join_date,email,phone,department,expertise,seniority,manager_id
+EMP001,Jennifer Rodriguez,Principal Consultant,Boston,2011-03-15,jennifer.rodriguez@omgconsulting.com,(617) 555-1289,Enterprise Applications,Enterprise Architecture,Senior,EMP000
+EMP003,Sarah Johnson,Practice Lead,San Francisco,2018-01-22,sarah.johnson@omgconsulting.com,(415) 555-8723,Data Platforms & Analytics,Data Strategy,Senior,EMP000
+EMP004,Marcus Washington,Executive Director,Austin,2016-11-01,marcus.washington@omgconsulting.com,(512) 555-9014,Digital Transformation,Change Management,Senior,EMP000
+EMP005,Sarah Chen,Senior Consultant,San Francisco,2019-06-10,sarah.chen@omgconsulting.com,(415) 555-3627,Enterprise Applications,Full Stack Development,Mid,EMP001
+EMP006,David Kim,Principal Cloud Architect,Chicago,2017-08-14,david.kim@omgconsulting.com,(312) 555-7891,Cloud Solutions,Multi-Cloud Strategy,Senior,EMP000
+EMP007,Elena Rodriguez,Director,Austin,2019-03-18,elena.rodriguez@omgconsulting.com,(512) 555-2476,Customer Experience,Journey Mapping,Senior,EMP000
+EMP008,Jason Chen,Practice Lead,Boston,2018-07-16,jason.chen@omgconsulting.com,(617) 555-9832,Artificial Intelligence & Machine Learning,Natural Language Processing,Senior,EMP000
+EMP009,Rachel Garcia,Principal Enterprise Architect,Chicago,2016-04-04,rachel.garcia@omgconsulting.com,(312) 555-3218,Enterprise Architecture,API Strategy,Senior,EMP000
+EMP010,Robert Jackson,Executive Partner,San Francisco,2016-09-12,robert.jackson@omgconsulting.com,(415) 555-7621,Technology Strategy,Digital Transformation,Executive,EMP000
+EMP011,Michelle Wong,Lead Experience Designer,Austin,2017-05-22,michelle.wong@omgconsulting.com,(512) 555-6342,Digital Experience,UX Design,Senior,EMP007
+EMP012,Thomas Miller,Healthcare Technology Practice Leader,Boston,2015-08-03,thomas.miller@omgconsulting.com,(617) 555-2134,Healthcare Technology,EHR Implementation,Senior,EMP000
+EMP013,Olivia Martinez,Director,Chicago,2017-02-27,olivia.martinez@omgconsulting.com,(312) 555-8764,Supply Chain & Operations,Digital Supply Chain,Senior,EMP000
+EMP014,James Wilson,Lead Blockchain Architect,San Francisco,2018-03-05,james.wilson@omgconsulting.com,(415) 555-3921,Emerging Technology,Blockchain and Tokenization,Mid,EMP010
+EMP015,Sophia Lee,Principal Consultant,Boston,2016-07-18,sophia.lee@omgconsulting.com,(617) 555-4829,Financial Services,Wealth Management Technology,Senior,EMP000
+EMP016,Daniel Singh,Principal DevOps Architect,Austin,2017-04-17,daniel.singh@omgconsulting.com,(512) 555-2176,Cloud Solutions,DevOps and SRE,Senior,EMP006
+EMP017,Amanda Taylor,Director,San Francisco,2018-05-14,amanda.taylor@omgconsulting.com,(415) 555-8926,Marketing Technology,Customer Data Platforms,Senior,EMP000
+EMP018,Jonathan Brooks,Manufacturing Innovation Practice Leader,Chicago,2016-08-22,jonathan.brooks@omgconsulting.com,(312) 555-3692,Manufacturing,Industry 4.0,Senior,EMP000
+EMP019,Nicole Adams,Director,Chicago,2017-10-09,nicole.adams@omgconsulting.com,(312) 555-7241,HR Technology & Transformation,People Analytics,Senior,EMP000
+EMP020,Alexander Schmidt,Sustainability Technology Practice Lead,Boston,2018-10-15,alexander.schmidt@omgconsulting.com,(617) 555-3847,Sustainability,ESG Reporting,Senior,EMP000
+EMP021,Lisa Wang,Innovation Strategy Director,San Francisco,2016-05-02,lisa.wang@omgconsulting.com,(415) 555-9274,Innovation & Emerging Technology,Design Thinking,Senior,EMP000
+EMP022,Ryan Carter,Managing Director,Boston,2016-08-15,ryan.carter@omgconsulting.com,(617) 555-1498,Cybersecurity,Security Architecture,Senior,EMP000
+EMP023,Gabriela Santos,Learning Technology Lead,Austin,2018-03-12,gabriela.santos@omgconsulting.com,(512) 555-3672,Learning & Development,Learning Experience Design,Mid,EMP004
+EMP024,Benjamin Okonkwo,Principal Data Architect,San Francisco,2017-05-29,benjamin.okonkwo@omgconsulting.com,(415) 555-4721,Data Engineering,Cloud Data Platforms,Senior,EMP003
+EMP025,Kimberly Nguyen,Director,Boston,2018-04-16,kimberly.nguyen@omgconsulting.com,(617) 555-8294,Business Intelligence,Data Visualization,Senior,EMP000
+EMP026,Carlos Rodriguez,Director,San Francisco,2016-11-28,carlos.rodriguez@omgconsulting.com,(415) 555-6108,Digital Product Strategy,Product Management,Senior,EMP000
+EMP027,Emily Johnson,Principal Consultant,Boston,2017-09-05,emily.johnson@omgconsulting.com,(617) 555-3976,Conversational AI,Natural Language Processing,Senior,EMP008
+EMP041,Carol Nguyen,Senior Consultant,Boston,2019-04-22,carol.nguyen@omgconsulting.com,(617) 555-4012,Healthcare Technology,Healthcare AI and Clinical Informatics,Senior,EMP012

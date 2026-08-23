@@ -1,0 +1,60 @@
+{
+  "ontologyId": "example-foundry-ontology",
+  "defaultDatasourceRid": "ri.foundry.main.datasource....",
+  "objectTypes": {
+    "Aircraft": {
+      "apiName": "Aircraft",
+      "displayName": "Aircraft",
+      "description": "A physical airplane asset",
+      "primaryKey": "aircraft_id",
+      "propertyTypes": {
+        "aircraft_id": {
+          "apiName": "aircraft_id",
+          "displayName": "Aircraft ID",
+          "dataType": "string"
+        },
+        "model_number": {
+          "apiName": "model_number",
+          "displayName": "Model Number",
+          "dataType": "string"
+        },
+        "registration_date": {
+          "apiName": "registration_date",
+          "displayName": "Registration Date",
+          "dataType": "datetime"
+        }
+      }
+    },
+    "Airport": {
+      "apiName": "Airport",
+      "displayName": "Airport",
+      "primaryKey": "airport_code",
+      "propertyTypes": {
+        "airport_code": {
+          "apiName": "airport_code",
+          "displayName": "Airport Code",
+          "dataType": "string"
+        },
+        "city": {
+          "apiName": "city",
+          "displayName": "City",
+          "dataType": "string"
+        },
+        "location": {
+          "apiName": "location",
+          "displayName": "Location",
+          "dataType": "geopoint"
+        }
+      }
+    }
+  },
+  "linkTypes": {
+    "OPERATES_AT": {
+      "apiName": "OPERATES_AT",
+      "displayName": "Operates at",
+      "baseObjectType": "Aircraft",
+      "targetObjectType": "Airport",
+      "cardinality": "MANY_TO_ONE"
+    }
+  }
+}

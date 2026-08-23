@@ -1,0 +1,40 @@
+@prefix :        <http://example.org/aviation#> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+
+#################################################################
+# Concept scheme
+#################################################################
+
+:AviationScheme a skos:ConceptScheme ;
+  skos:prefLabel "Aviation Concept Scheme"@en ;
+  skos:note "Simple Airport domain description."@en .
+
+#################################################################
+# Concepts
+#################################################################
+
+:AircraftConcept a skos:Concept ;
+  skos:prefLabel "Aircraft"@en ;
+  skos:definition "A physical airplane asset."@en ;
+  skos:inScheme :AviationScheme .
+
+:AirportConcept a skos:Concept ;
+  skos:prefLabel "Airport"@en ;
+  skos:definition "An airport where aircraft operate."@en ;
+  skos:inScheme :AviationScheme .
+
+#################################################################
+# Relationship as a SKOS semantic relation
+#################################################################
+
+:operatesAt a rdf:Property ;
+  rdfs:label "operates at"@en ;
+  rdfs:comment "Relates the concept of Aircraft to the concept of Airport (OPERATES_AT)."@en ;
+  rdfs:subPropertyOf skos:related ;
+  rdfs:domain skos:Concept ;
+  rdfs:range skos:Concept .
+
+# Using the property between the concepts
+:AircraftConcept :operatesAt :AirportConcept .

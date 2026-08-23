@@ -1,0 +1,6 @@
+chromadb
+openai
+streamlit
+python-dotenv
+pandas
+# tiktoken

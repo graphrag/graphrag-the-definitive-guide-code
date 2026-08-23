@@ -1,0 +1,53 @@
+{
+  "node_types": [
+    {
+      "label": "Aircraft",
+      "description": "A physical airplane asset",
+      "properties": [
+        {
+          "name": "aircraft_id",
+          "type": "STRING"
+        },
+        {
+          "name": "model_number",
+          "type": "STRING"
+        },
+        {
+          "name": "registration_date",
+          "type": "DATETIME"
+        }
+      ]
+    },
+    {
+      "label": "Airport",
+      "description": "An airport where aircraft operate",
+      "properties": [
+        {
+          "name": "airport_code",
+          "type": "STRING"
+        },
+        {
+          "name": "city",
+          "type": "STRING"
+        },
+        {
+          "name": "location",
+          "type": "STRING"
+        }
+      ]
+    }
+  ],
+  "relationship_types": [
+    {
+      "label": "OPERATES_AT",
+      "description": "Many Aircraft operate at one Airport"
+    }
+  ],
+  "patterns": [
+    [
+      "Aircraft",
+      "OPERATES_AT",
+      "Airport"
+    ]
+  ]
+}
