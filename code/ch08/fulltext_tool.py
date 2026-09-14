@@ -22,7 +22,10 @@ def register_fulltext_tool(schemas: list[dict], executors: dict):
             "type": "function",
             "function": {
                 "name": "fulltext_search_clients",
-                "description": "Search clients by name. Supports fuzzy ('Acme~'), wildcard ('Acm*'), and boolean ('Acme AND Corp') syntax.",
+                "description": (
+                    "Search clients by name. Supports fuzzy ('Acme~'), "
+                    "wildcard ('Acm*'), and boolean ('Acme AND Corp') syntax."
+                ),
                 "parameters": {
                     "type": "object",
                     "properties": {

@@ -6,19 +6,35 @@ from utils import driver, get_embedding, oai_client
 
 # tag::community_report_prompt[]
 COMMUNITY_REPORT_PROMPT = """
-You are an AI assistant that helps a human analyst to perform general information discovery. Information discovery is the process of identifying and assessing relevant information associated with certain entities (e.g., organizations and individuals) within a network.
+You are an AI assistant that helps a human analyst to perform general
+information discovery. Information discovery is the process of identifying
+and assessing relevant information associated with certain entities (e.g.,
+organizations and individuals) within a network.
 
 # Goal
-Write a comprehensive report of a community, given a list of entities that belong to the community as well as their relationships and optional associated claims. The report will be used to inform decision-makers about information associated with the community and their potential impact. The content of this report includes an overview of the community's key entities, their legal compliance, technical capabilities, reputation, and noteworthy claims.
+Write a comprehensive report of a community, given a list of entities that
+belong to the community as well as their relationships and optional
+associated claims. The report will be used to inform decision-makers about
+information associated with the community and their potential impact. The
+content of this report includes an overview of the community's key
+entities, their legal compliance, technical capabilities, reputation, and
+noteworthy claims.
 
 # Report Structure
 
 The report should include the following sections:
 
-- TITLE: community's name that represents its key entities - title should be short but specific. When possible, include representative named entities in the title.
-- SUMMARY: An executive summary of the community's overall structure, how its entities are related to each other, and significant information associated with its entities.
-- IMPACT SEVERITY RATING: a float score between 0-10 that represents the severity of IMPACT posed by entities within the community.  IMPACT is the scored importance of a community.
-- RATING EXPLANATION: Give a single sentence explanation of the IMPACT severity rating.
+- TITLE: community's name that represents its key entities - title should
+  be short but specific. When possible, include representative named
+  entities in the title.
+- SUMMARY: An executive summary of the community's overall structure, how
+  its entities are related to each other, and significant information
+  associated with its entities.
+- IMPACT SEVERITY RATING: a float score between 0-10 that represents the
+  severity of IMPACT posed by entities within the community. IMPACT is the
+  scored importance of a community.
+- RATING EXPLANATION: Give a single sentence explanation of the IMPACT
+  severity rating.
 
 Return output as a well-formed JSON-formatted string with the following format:
     {{
@@ -32,14 +48,20 @@ Return output as a well-formed JSON-formatted string with the following format:
 
 Points supported by data should list their data references as follows:
 
-"This is an example sentence supported by multiple data references [Data: <dataset name> (record ids); <dataset name> (record ids)]."
+"This is an example sentence supported by multiple data references \
+[Data: <dataset name> (record ids); <dataset name> (record ids)]."
 
-Do not list more than 5 record ids in a single reference. Instead, list the top 5 most relevant record ids and add "+more" to indicate that there are more.
+Do not list more than 5 record ids in a single reference. Instead, list \
+the top 5 most relevant record ids and add "+more" to indicate that there \
+are more.
 
 For example:
-"Person X is the owner of Company Y and subject to many allegations of wrongdoing [Data: Reports (1), Entities (5, 7); Relationships (23); Claims (7, 2, 34, 64, 46, +more)]."
+"Person X is the owner of Company Y and subject to many allegations of \
+wrongdoing [Data: Reports (1), Entities (5, 7); Relationships (23); \
+Claims (7, 2, 34, 64, 46, +more)]."
 
-where 1, 5, 7, 23, 2, 34, 46, and 64 represent the id (not the index) of the relevant data record.
+where 1, 5, 7, 23, 2, 34, 46, and 64 represent the id (not the index) of the
+relevant data record.
 
 Do not include information where the supporting evidence for it is not provided.
 
@@ -53,24 +75,28 @@ Entities
 
 human_readable_id,title,description
 5,VERDANT OASIS PLAZA,Verdant Oasis Plaza is the location of the Unity March
-6,HARMONY ASSEMBLY,Harmony Assembly is an organization that is holding a march at Verdant Oasis Plaza
+6,HARMONY ASSEMBLY,Harmony Assembly is holding a march at Verdant Oasis Plaza
 
 Relationships
 
 human_readable_id,source,target,description
-37,VERDANT OASIS PLAZA,UNITY MARCH,Verdant Oasis Plaza is the location of the Unity March
-38,VERDANT OASIS PLAZA,HARMONY ASSEMBLY,Harmony Assembly is holding a march at Verdant Oasis Plaza
-39,VERDANT OASIS PLAZA,UNITY MARCH,The Unity March is taking place at Verdant Oasis Plaza
-40,VERDANT OASIS PLAZA,TRIBUNE SPOTLIGHT,Tribune Spotlight is reporting on the Unity march taking place at Verdant Oasis Plaza
-41,VERDANT OASIS PLAZA,BAILEY ASADI,Bailey Asadi is speaking at Verdant Oasis Plaza about the march
+37,VERDANT OASIS PLAZA,UNITY MARCH,Location of the Unity March
+38,VERDANT OASIS PLAZA,HARMONY ASSEMBLY,Holding a march at Verdant Oasis Plaza
+39,VERDANT OASIS PLAZA,UNITY MARCH,Taking place at Verdant Oasis Plaza
+40,VERDANT OASIS PLAZA,TRIBUNE SPOTLIGHT,Reporting on the march
+41,VERDANT OASIS PLAZA,BAILEY ASADI,Speaking about the march
 43,HARMONY ASSEMBLY,UNITY MARCH,Harmony Assembly is organizing the Unity March
 
 Output:
 {{
     "title": "Verdant Oasis Plaza and Unity March",
-    "summary": "The community revolves around the Verdant Oasis Plaza, which is the location of the Unity March. The plaza has relationships with the Harmony Assembly, Unity March, and Tribune Spotlight, all of which are associated with the march event.",
+    "summary": "The community revolves around the Verdant Oasis Plaza, which \
+is the location of the Unity March. The plaza has relationships with the \
+Harmony Assembly, Unity March, and Tribune Spotlight, all of which are \
+associated with the march event.",
     "rating": 5.0,
-    "rating_explanation": "The impact severity rating is moderate due to the potential for unrest or conflict during the Unity March."
+    "rating_explanation": "The impact severity rating is moderate due to \
+the potential for unrest or conflict during the Unity March."
 }}
 
 # Real Data
@@ -116,7 +142,9 @@ RETURN c.id AS community_id,
 """
 
 
-def build_input_text(node_summaries: list[str], rel_descriptions: list[str]) -> str:
+def build_input_text(
+    node_summaries: list[str], rel_descriptions: list[str]
+) -> str:
     entities_section = "Entities\n\n"
     for i, summary in enumerate(node_summaries):
         if summary:
@@ -145,7 +173,11 @@ async def summarize_community(
         messages=[
             {
                 "role": "system",
-                "content": "You are an AI assistant that helps a human analyst perform general information discovery. Respond only with valid JSON.",
+                "content": (
+                    "You are an AI assistant that helps a human analyst "
+                    "perform general information discovery. Respond only "
+                    "with valid JSON."
+                ),
             },
             {"role": "user", "content": prompt},
         ],
@@ -168,7 +200,8 @@ async def process_community(
         report = await summarize_community(node_summaries, rel_descriptions)
         summary_text = report.get("summary", "")
         embedding = await get_embedding(summary_text)
-        print(f"✓ Community {community_id}: {report.get('title', 'Untitled')}")
+        title = report.get('title', 'Untitled')
+        print(f"✓ Community {community_id}: {title}")
         return {
             "community_id": community_id,
             "title": report.get("title", ""),

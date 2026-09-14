@@ -4,14 +4,22 @@ from utils import driver, get_embedding, oai_client
 
 # tag::incremental_update_prompt[]
 INCREMENTAL_UPDATE_PROMPT = """
-You are a helpful assistant responsible for updating an existing summary with newly discovered information.
-Given one or more entities, an existing summary, and a list of new descriptions — all related to the same entity or group of entities.
-Please produce an updated summary that integrates the new descriptions into the existing one.
-Make sure to include information collected from all new descriptions without dropping facts already present in the existing summary.
-If new descriptions contradict the existing summary, resolve the contradictions by preferring the newer information.
-If the existing summary is empty, generate a fresh summary from the new descriptions alone.
-Do not repeat information that is already adequately captured in the existing summary.
-Make sure it is written in third person, and include the entity names so we have the full context.
+You are a helpful assistant responsible for updating an existing summary
+with newly discovered information.
+Given one or more entities, an existing summary, and a list of new
+descriptions — all related to the same entity or group of entities.
+Please produce an updated summary that integrates the new descriptions
+into the existing one.
+Make sure to include information collected from all new descriptions
+without dropping facts already present in the existing summary.
+If new descriptions contradict the existing summary, resolve the
+contradictions by preferring the newer information.
+If the existing summary is empty, generate a fresh summary from the new
+descriptions alone.
+Do not repeat information that is already adequately captured in the
+existing summary.
+Make sure it is written in third person, and include the entity names so
+we have the full context.
 
 #######
 -Data-
@@ -29,7 +37,8 @@ MATCH (n:`__Entity__`)
 WHERE n.summary IS NOT NULL
   AND count{(n)<-[:MENTIONS {processed: false}]-()} > 1
 MATCH (n)<-[r:MENTIONS {processed: false}]-()
-RETURN n.id AS entity, n.summary AS existing_summary, collect(r.description) AS descriptions
+RETURN n.id AS entity, n.summary AS existing_summary,
+       collect(r.description) AS descriptions
 """
 
 STORE_NODE_SUMMARY_CYPHER = """
@@ -60,7 +69,10 @@ async def incremental_summarize_node(
         messages=[
             {
                 "role": "system",
-                "content": "You are an expert data extraction assistant. Follow formatting strictly.",
+                "content": (
+                    "You are an expert data extraction assistant. Follow "
+                    "formatting strictly."
+                ),
             },
             {"role": "user", "content": prompt},
         ],
@@ -90,17 +102,20 @@ FETCH_RELS_CYPHER = """
 MATCH (e1:__Entity__)-[rs:RELATIONSHIP_SUMMARY]->(e2:__Entity__)
 WHERE count{(e1)-[r:RELATIONSHIP {processed: false}]-(e2)} > 1
 MATCH (e1)-[r:RELATIONSHIP {processed: false}]-(e2)
-RETURN e1.id AS entity1, e2.id AS entity2, rs.summary AS existing_summary, collect(r.description) AS descriptions
+RETURN e1.id AS entity1, e2.id AS entity2, rs.summary AS existing_summary,
+       collect(r.description) AS descriptions
 """
 
 STORE_REL_SUMMARY_CYPHER = """
 UNWIND $rows AS row
-MATCH (e1:__Entity__ {id: row.entity1})-[rs:RELATIONSHIP_SUMMARY]->(e2:__Entity__ {id: row.entity2})
+MATCH (e1:__Entity__ {id: row.entity1})
+      -[rs:RELATIONSHIP_SUMMARY]->(e2:__Entity__ {id: row.entity2})
 SET rs.summary = row.summary, rs.last_update_date = datetime()
 WITH rs, row
 CALL db.create.setRelationshipVectorProperty(rs, 'embedding', row.embedding)
 WITH row
-MATCH (e1:__Entity__ {id: row.entity1})-[r:RELATIONSHIP {processed: false}]-(e2:__Entity__ {id: row.entity2})
+MATCH (e1:__Entity__ {id: row.entity1})
+      -[r:RELATIONSHIP {processed: false}]-(e2:__Entity__ {id: row.entity2})
 SET r.processed = true
 """
 
@@ -122,7 +137,10 @@ async def incremental_summarize_rel(
         messages=[
             {
                 "role": "system",
-                "content": "You are an expert data extraction assistant. Follow formatting strictly.",
+                "content": (
+                    "You are an expert data extraction assistant. Follow "
+                    "formatting strictly."
+                ),
             },
             {"role": "user", "content": prompt},
         ],
@@ -164,7 +182,9 @@ async def main():
 
     if entities:
         tasks = [
-            process_entity(e["entity"], e["existing_summary"], e["descriptions"], sem)
+            process_entity(
+                e["entity"], e["existing_summary"], e["descriptions"], sem
+            )
             for e in entities
         ]
         results = await asyncio.gather(*tasks, return_exceptions=True)

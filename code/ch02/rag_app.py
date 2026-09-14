@@ -47,9 +47,9 @@ def generate_response(context, query):
     """
     messages.append({"role": "user", "content": prompt.format(context=context, query=query)})
     response = openai.chat.completions.create(
-        model="gpt-5",
+        model="gpt-5.6",
         messages=messages,
-        max_tokens=200
+        max_completion_tokens=200
     )
     answer = response.choices[0].message.content
     messages.append({"role": "assistant", "content": answer})

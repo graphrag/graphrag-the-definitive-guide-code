@@ -4,23 +4,33 @@ from openai import AsyncOpenAI
 from utils import driver, oai_client
 
 # tag::entity_resolution_prompt[]
-ENTITY_RESOLUTION_PROMPT = """You are an expert entity resolution system. Given a list of entity names of type "{label}", identify groups of names that refer to the EXACT same real-world entity, just written differently.
+ENTITY_RESOLUTION_PROMPT = """You are an expert entity resolution system. \
+Given a list of entity names of type "{label}", identify groups of names \
+that refer to the EXACT same real-world entity, just written differently.
 
-ONLY merge when names are clearly alternate forms of the identical entity, such as:
+ONLY merge when names are clearly alternate forms of the identical entity,
+such as:
 - Abbreviations: "EUROPEAN-UNION" and "EU"
 - Spelling variations: "ACME-CORPORATION" and "ACME-CORP"
 - Acronyms: "INTERNATIONAL-BUSINESS-MACHINES" and "IBM"
 
 DO NOT merge:
-- Entities that are subsets or parts of each other (e.g. "US-DEPARTMENT-OF-DEFENCE" and "PENTAGON" are related but distinct)
-- Entities that overlap geographically or conceptually but are not the same thing (e.g. "MIDDLE-EAST" and "WEST-ASIA")
+- Entities that are subsets or parts of each other (e.g.
+  "US-DEPARTMENT-OF-DEFENCE" and "PENTAGON" are related but distinct)
+- Entities that overlap geographically or conceptually but are not the same
+  thing (e.g. "MIDDLE-EAST" and "WEST-ASIA")
 - Parent orgs and subsidiaries (e.g. "ALPHABET" and "GOOGLE")
-- An organization/institution and the place it is named after or located in (e.g. "UNIVERSITY-OF-WARWICK" and "WARWICK")
+- An organization/institution and the place it is named after or located in
+  (e.g. "UNIVERSITY-OF-WARWICK" and "WARWICK")
 - Entities where the equivalence is debatable or context-dependent
 
-It is FAR better to miss a true duplicate than to incorrectly merge two distinct entities. When in doubt, do NOT merge.
+It is FAR better to miss a true duplicate than to incorrectly merge two
+distinct entities. When in doubt, do NOT merge.
 
-Return a JSON list of lists. Each inner list should contain all names that refer to the same entity, with the canonical (most complete/formal) name as the FIRST element. Only include groups where there are actual duplicates (2+ names). If no duplicates exist, return an empty list.
+Return a JSON list of lists. Each inner list should contain all names that
+refer to the same entity, with the canonical (most complete/formal) name as
+the FIRST element. Only include groups where there are actual duplicates
+(2+ names). If no duplicates exist, return an empty list.
 
 Example output:
 [
@@ -54,7 +64,10 @@ async def resolve_entities_for_label(
     )
     text = response.output_text.strip()
     # Strip markdown fences if present
-    text = text.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+    text = (
+        text.removeprefix("```json").removeprefix("```")
+        .removesuffix("```").strip()
+    )
     result = json.loads(text)
     return result
 
@@ -101,9 +114,12 @@ async def main():
             UNWIND $groups AS group
             MATCH (e:__Entity__) WHERE e.id IN group
             WITH group, collect(e) AS nodes
-            // Reorder so the canonical node (first in group) is first in the list
-            WITH [n IN nodes WHERE n.id = group[0]] + [n IN nodes WHERE n.id <> group[0]] AS ordered
-            CALL apoc.refactor.mergeNodes(ordered, {properties: "discard", mergeRels: false})
+            // Reorder so the canonical node (first in group) is first
+            WITH [n IN nodes WHERE n.id = group[0]] +
+                 [n IN nodes WHERE n.id <> group[0]] AS ordered
+            CALL apoc.refactor.mergeNodes(
+                ordered, {properties: "discard", mergeRels: false}
+            )
             YIELD node
             RETURN count(node) AS merged
             """,

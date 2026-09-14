@@ -26,10 +26,11 @@ RETURN g.graphName AS graph, g.nodeCount AS nodes, g.relationshipCount AS rels""
 
 driver.execute_query(
     # tag::leiden[]
-    """CALL gds.leiden.write(
-                     "entityGraph",
-                     {writeProperty:"community",
-                     includeIntermediateCommunities:True})"""
+    """
+CALL gds.leiden.write(
+  "entityGraph",
+  {writeProperty: "community", includeIntermediateCommunities: True}
+)"""
     # end::leiden[]
 )
 

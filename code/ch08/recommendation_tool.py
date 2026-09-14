@@ -16,7 +16,8 @@ def register_recommendation_tool(schemas: list[dict], executors: dict):
             OPTIONAL MATCH (tech)<-[:SKILL_FOR]-(s:Skill)<-[:HAS_SKILL]-(person:Person)
             WITH c, ind, tech, person,
                  CASE WHEN person IS NOT NULL THEN 1 ELSE 0 END AS hasDirectSkill
-            OPTIONAL MATCH (person)-[:WORKED_ON]->(pp:Project)-[:FOR_CLIENT]->(cc:Client)-[:IN_INDUSTRY]->(ind)
+            OPTIONAL MATCH (person)-[:WORKED_ON]->(pp:Project)-[:FOR_CLIENT]->(cc:Client)
+              -[:IN_INDUSTRY]->(ind)
             WITH person, tech,
                  hasDirectSkill,
                  CASE WHEN pp IS NOT NULL THEN 1 ELSE 0 END AS industryExperience,
@@ -49,21 +50,30 @@ def register_recommendation_tool(schemas: list[dict], executors: dict):
             "function": {
                 "name": "recommend_team",
                 "description": (
-                    "Recommend the best available consultants for a new project. "
-                    "Ranks candidates by a composite score based on matching technology skills, "
-                    "prior experience in the client's industry, and familiarity with the specific client."
+                    "Recommend the best available consultants for a new "
+                    "project. Ranks candidates by a composite score based "
+                    "on matching technology skills, prior experience in "
+                    "the client's industry, and familiarity with the "
+                    "specific client."
                 ),
                 "parameters": {
                     "type": "object",
                     "properties": {
                         "client_name": {
                             "type": "string",
-                            "description": "The exact name of the client the project is for.",
+                            "description": (
+                                "The exact name of the client the project "
+                                "is for."
+                            ),
                         },
                         "required_technologies": {
                             "type": "array",
                             "items": {"type": "string"},
-                            "description": "List of technology names required for the project (e.g. ['Kubernetes', 'AWS', 'Kafka']).",
+                            "description": (
+                                "List of technology names required for "
+                                "the project (e.g. ['Kubernetes', 'AWS', "
+                                "'Kafka'])."
+                            ),
                         },
                     },
                     "required": ["client_name", "required_technologies"],

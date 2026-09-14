@@ -6,7 +6,7 @@ from neo4j import GraphDatabase
 import openai
 
 # Load environment variables
-load_dotenv("graphrag-book.env")
+load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # Neo4j connection
@@ -42,9 +42,9 @@ def generate_response(context, query):
               {"role": "user", "content": prompt}]
 
     response = openai.chat.completions.create(
-        model="gpt-5",
+        model="gpt-5.6",
         messages=messages,
-        max_tokens=200
+        max_completion_tokens=200
     )
     answer = response.choices[0].message.content
     return answer

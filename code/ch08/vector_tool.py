@@ -28,13 +28,19 @@ def register_vector_tool(schemas: list[dict], executors: dict):
             "type": "function",
             "function": {
                 "name": "vector_search_projects",
-                "description": "Find projects semantically similar to a natural-language query.",
+                "description": (
+                    "Find projects semantically similar to a "
+                    "natural-language query."
+                ),
                 "parameters": {
                     "type": "object",
                     "properties": {
                         "query": {
                             "type": "string",
-                            "description": "Natural-language search query describing the kind of project to find.",
+                            "description": (
+                                "Natural-language search query describing "
+                                "the kind of project to find."
+                            ),
                         },
                     },
                     "required": ["query"],

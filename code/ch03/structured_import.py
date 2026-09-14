@@ -38,7 +38,8 @@ def import_people(base_path):
         UNWIND $people AS person
         MERGE (p:Person {id: person.employee_id})
         SET p:__Entity__
-        SET p += person {.full_name, .role, .department, .email, .phone, .office_location, .expertise, .seniority},
+        SET p += person {.full_name, .role, .department, .email, .phone,
+                         .office_location, .expertise, .seniority},
             p.joined = date(person.join_date)
         WITH p, person WHERE person.manager_id <> ''
         MERGE (manager:Person {id: person.manager_id})
@@ -58,11 +59,14 @@ def import_skills(base_path):
         ON CREATE SET s.name = skill.skill_name
         // SET s:__Entity__
         MERGE (p)-[r:HAS_SKILL]->(s)
-        SET r += skill {.skill_category, .proficiency_level, .certification, .skill_description, .project_acquired},
+        SET r += skill {.skill_category, .proficiency_level, .certification,
+                        .skill_description, .project_acquired},
             r.category = skill.skill_category,
             r.proficiency = skill.proficiency_level,
             r.acquisition_date = date(skill.acquisition_date),
-            r.last_used = CASE skill.last_used_date WHEN 'Active' THEN null ELSE date(skill.last_used_date) END,
+            r.last_used = CASE skill.last_used_date
+                          WHEN 'Active' THEN null
+                          ELSE date(skill.last_used_date) END,
             r.description = skill.skill_description,
             r.project_acquired = skill.project_acquired
         """, {"skills": skills_df.to_dict("records")})
