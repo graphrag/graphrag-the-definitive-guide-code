@@ -1,10 +1,10 @@
-"""Agent loop extended with context-graph memory (neo4j-agent-memory v0.2.0).
+"""Agent loop extended with context-graph memory (neo4j-agent-memory v0.7+).
 
 Diff against ch08/agent.py:
 
   + Loads the user's preferences and recent successful traces at the start
-    of each turn (the bootstrap retrieval, query B in section 6) and folds
-    them into the system prompt.
+    of each turn (the bootstrap retrieval, query B in the Memory-Augmented
+    Retrieval section) and folds them into the system prompt.
   + Records every user/assistant message into short-term memory.
   + Opens a ReasoningTrace per turn, writes a ReasoningStep + ToolCall per
     tool invocation, and closes the trace with a structured TraceOutcome.
@@ -28,7 +28,7 @@ BASE_SYSTEM_PROMPT = (
     "You have access to a Neo4j database via tools. "
     "NEVER guess or fabricate information. Either use tools or tell the user you don't know.\n\n"
     "Rules:\n"
-    "1. Before ANY Cypher query, ALWAYS call `get_schema` first to understand the available node labels, "
+    "1. Before ANY Cypher query, ALWAYS call `get-schema` first to understand the available node labels, "
     "relationship types, and property keys. Never assume the schema.\n"
     "2. Write Cypher queries based strictly on the schema returned — do not invent labels, types, or properties.\n"
     "3. If the tools return no results, say you don't know. Do not speculate.\n"
@@ -115,7 +115,7 @@ async def agent_loop(
                 )
                 # Close the trace with a structured outcome (success flag,
                 # summary, metrics) — this is what indexes for case-based
-                # retrieval in section 6.
+                # retrieval in the Memory-Augmented Retrieval section.
                 await memory.reasoning.complete_trace(
                     trace.id,
                     outcome=TraceOutcome(
@@ -170,7 +170,6 @@ async def agent_loop(
                     arguments=args,
                     result=output,
                     status=status,
-                    error_kind=error_kind,
                     error=error_msg,
                     message_id=str(user_msg.id),
                 )

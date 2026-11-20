@@ -2,5 +2,5 @@ neo4j
 openai
 streamlit
 python-dotenv
-mcp
+mcp<2
 pandas

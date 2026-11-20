@@ -25,15 +25,20 @@ QUESTIONS = [
         ),
     },
     {
-        "question": "Who has worked on the Cybersecurity Transformation project?",
+        "question": (
+            "Who has worked on the Cybersecurity Transformation project?"
+        ),
         "reference": (
             "Ryan Carter (Project Lead), Alexander Schmidt (Security Lead), "
             "David Kim (Cloud Security), and Daniel Singh (DevSecOps) worked "
-            "on the Cybersecurity Transformation project for SecureFinancial Group."
+            "on the Cybersecurity Transformation project for "
+            "SecureFinancial Group."
         ),
     },
     {
-        "question": "How many people in our company have both GenAI and Healthcare experience?",
+        "question": (
+            "How many people have both GenAI and Healthcare experience?"
+        ),
         "reference": (
             "Based on the OMG demo data, several consultants combine GenAI "
             "and Healthcare experience; the exact count depends on the loaded "
@@ -42,11 +47,12 @@ QUESTIONS = [
     },
 ]
 
-JUDGE_PROMPT = """Grade the factual correctness of a candidate answer against a reference answer.
+JUDGE_PROMPT = """\
+Grade the factual correctness of a candidate answer against a reference answer.
 
 Score whether the claims the candidate makes are factually right. A short answer
-that gets its facts right is correct; wrong claims, hallucinations, or contradictions
-of the reference all hurt this score.
+that gets its facts right is correct; wrong claims, hallucinations, or
+contradictions of the reference all hurt this score.
 
 Return JSON: {{"score": <0-5 int>, "reason": "<one sentence>"}}
 
@@ -64,7 +70,9 @@ Scoring: 5=all claims correct; 3=mostly correct with minor inaccuracies;
 
 def judge(question: str, reference: str, candidate: str) -> dict:
     """Run the pointwise correctness judge and return parsed JSON."""
-    prompt = JUDGE_PROMPT.format(question=question, reference=reference, candidate=candidate)
+    prompt = JUDGE_PROMPT.format(
+        question=question, reference=reference, candidate=candidate
+    )
     resp = openai.chat.completions.create(
         model="gpt-5",
         messages=[{"role": "user", "content": prompt}],
@@ -101,6 +109,7 @@ if __name__ == "__main__":
         g = runs[1]["results"][i]["score"]
         print(f"{q['question'][:60]:<60} {v:>8} {g:>10}")
     print("-" * 80)
-    print(f"{'Average':<60} {runs[0]['average']:>8.2f} {runs[1]['average']:>10.2f}")
+    print(f"{'Average':<60} {runs[0]['average']:>8.2f} "
+          f"{runs[1]['average']:>10.2f}")
     driver.close()
 # end::quick_eval[]

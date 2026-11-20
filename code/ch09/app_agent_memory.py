@@ -8,7 +8,7 @@ Diff against ch08/app_agent.py:
   + Each agent response collapses a "Reasoning trace" expander populated
     from the graph itself, not just from an in-memory log.
 """
-import asyncio, os
+import asyncio, os, uuid
 from contextlib import AsyncExitStack
 
 import nest_asyncio
@@ -101,8 +101,8 @@ async def list_user_conversations(memory: MemoryClient, email: str) -> list[dict
 
 
 async def list_user_preferences(memory: MemoryClient, email: str) -> list[dict]:
-    """Native v0.2.0 preferences API plus a tiny extra read for scope."""
-    prefs = await memory.long_term.get_preferences(
+    """Native preferences API plus a tiny extra read for scope."""
+    prefs = await memory.long_term.get_preferences_for(
         user_identifier=email, active_only=True
     )
     if not prefs:
@@ -184,6 +184,7 @@ with st.sidebar:
 # user_identifier is provided.
 if "session_id" not in st.session_state or st.session_state.get("session_user") != email:
     conv = run_async(memory.short_term.create_conversation(
+        session_id=str(uuid.uuid4()),
         title="New conversation", user_identifier=email,
     ))
     st.session_state.session_id = conv.session_id
@@ -235,7 +236,8 @@ if prompt := st.chat_input("Ask about OMG staffing..."):
         last_user_msg_id = run_async(
             memory.graph.execute_read(
                 """
-                MATCH (c:Conversation {session_id: $sid})-[:HAS_MESSAGE]->(m:Message {role:'user'})
+                MATCH (c:Conversation {session_id: $sid})
+                      -[:HAS_MESSAGE]->(m:Message {role:'user'})
                 RETURN m.id AS id ORDER BY m.timestamp DESC LIMIT 1
                 """,
                 {"sid": st.session_state.session_id},
@@ -243,7 +245,9 @@ if prompt := st.chat_input("Ask about OMG staffing..."):
         )
         trace = None
         if last_user_msg_id:
-            trace = run_async(fetch_trace_for_message(memory, last_user_msg_id[0]["id"]))
+            trace = run_async(
+                fetch_trace_for_message(memory, last_user_msg_id[0]["id"])
+            )
         if trace:
             with st.expander("Reasoning trace"):
                 for s in trace["steps"]:

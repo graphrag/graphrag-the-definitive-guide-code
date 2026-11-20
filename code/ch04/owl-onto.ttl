@@ -10,7 +10,8 @@
 
 :aviation-ontology a owl:Ontology ;
   rdfs:label "Example Aviation Ontology" ;
-  rdfs:comment "Ontology defining Aircraft, Airport and the OPERATES_AT relationship." .
+  rdfs:comment
+    "Ontology defining Aircraft, Airport and the OPERATES_AT relationship." .
 
 #################################################################
 # Classes
@@ -30,11 +31,12 @@
 
 :operatesAt a owl:ObjectProperty , owl:FunctionalProperty ;
   rdfs:label "operates at" ;
-  rdfs:comment "Relates an Aircraft to the Airport at which it operates. MANY_TO_ONE (many Aircraft -> one Airport)." ;
+  rdfs:comment """Relates an Aircraft to the Airport at which it operates.
+    MANY_TO_ONE (many Aircraft -> one Airport).""" ;
   rdfs:domain :Aircraft ;
   rdfs:range  :Airport .
 
-# Optional inverse property (not strictly required, but often handy)
+# Optional inverse property (not strictly required but often handy)
 :hasOperatingAircraft a owl:ObjectProperty ;
   rdfs:label "has operating aircraft" ;
   rdfs:domain :Airport ;

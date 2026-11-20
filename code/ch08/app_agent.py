@@ -57,7 +57,9 @@ def render_tool_calls(tool_calls_log: list[dict]):
             result = tc["result"]
             # Try to pretty-print JSON results, fall back to plain text
             try:
-                parsed = json.loads(result) if isinstance(result, str) else result
+                parsed = (
+                    json.loads(result) if isinstance(result, str) else result
+                )
                 st.code(json.dumps(parsed, indent=2), language="json")
             except (json.JSONDecodeError, TypeError):
                 st.code(str(result), language=None)
@@ -92,7 +94,9 @@ for msg in st.session_state.display_messages:
         st.markdown(msg["content"])
 
 if prompt := st.chat_input("Ask about your graph..."):
-    st.session_state.display_messages.append({"role": "user", "content": prompt})
+    st.session_state.display_messages.append(
+        {"role": "user", "content": prompt}
+    )
     with st.chat_message("user"):
         st.markdown(prompt)
 
@@ -118,5 +122,6 @@ if prompt := st.chat_input("Ask about your graph..."):
         st.markdown(answer)
 
     st.session_state.display_messages.append(
-        {"role": "assistant", "content": answer, "tool_calls_log": tool_calls_log}
+        {"role": "assistant", "content": answer,
+         "tool_calls_log": tool_calls_log}
     )

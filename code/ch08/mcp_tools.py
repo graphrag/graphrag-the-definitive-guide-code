@@ -26,7 +26,9 @@ async def register_mcp_tools(session: ClientSession) -> tuple[list[dict], dict]:
 
         async def execute(args, _n=name, _s=session):
             result = await _s.call_tool(_n, arguments=args)
-            return "\n".join(p.text for p in result.content if hasattr(p, "text"))
+            return "\n".join(
+                p.text for p in result.content if hasattr(p, "text")
+            )
 
         executors[name] = execute
 

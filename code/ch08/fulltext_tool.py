@@ -31,7 +31,10 @@ def register_fulltext_tool(schemas: list[dict], executors: dict):
                     "properties": {
                         "search_term": {
                             "type": "string",
-                            "description": "The search term to match against client names.",
+                            "description": (
+                                "The search term to match "
+                                "against client names."
+                            ),
                         },
                     },
                     "required": ["search_term"],

@@ -1,7 +1,12 @@
 # Emily Johnson
 
 ## Professional Summary
-Conversational AI and Intelligent Automation Leader with 9+ years of experience designing and implementing AI-powered conversation systems, virtual assistants, and process automation solutions. Expertise in natural language processing, dialogue management, and AI governance. Proven track record of delivering innovative conversational experiences that enhance customer engagement and operational efficiency.
+Conversational AI and Intelligent Automation Leader with 9+ years of experience
+designing and implementing AI-powered conversation systems, virtual assistants,
+and process automation solutions. Expertise in natural language processing,
+dialogue management, and AI governance. Proven track record of delivering
+innovative conversational experiences that enhance customer engagement and
+operational efficiency.
 
 ## Contact Information
 - **Email:** emily.johnson@omgconsulting.com
@@ -14,7 +19,8 @@ Conversational AI and Intelligent Automation Leader with 9+ years of experience 
 - **Master of Science in Computer Science**, Carnegie Mellon University (2014)
   - Specialization in Artificial Intelligence and Natural Language Processing
   - Thesis: "Context-Aware Dialogue Systems for Customer Service Applications"
-- **Bachelor of Science in Computer Science and Linguistics**, University of Massachusetts Amherst (2011)
+- **Bachelor of Science in Computer Science and Linguistics**,
+  University of Massachusetts Amherst (2011)
   - Double Major
   - Graduated Summa Cum Laude
 

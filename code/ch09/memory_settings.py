@@ -33,8 +33,8 @@ def build_memory_settings() -> MemorySettings:
     The custom ontology overrides POLE+O so the library's MENTIONS edges
     land on existing OMG nodes (after `adopt_omg_graph.py` has been run).
     The three-stage extraction pipeline (spaCy fast, GLiNER2 zero-shot,
-    LLM fallback) handles the cost/quality tradeoff: most messages settle
-    at spaCy or GLiNER2; the LLM only runs when the cheaper extractors
+    LLM fallback) handles the cost/quality trade-off: most messages settle
+    at spaCy or GLiNER2; the LLM runs only when the cheaper extractors
     fail to find domain entities.
     """
     return MemorySettings(
@@ -54,9 +54,9 @@ def build_memory_settings() -> MemorySettings:
             extractor_type=ExtractorType.PIPELINE,  # spaCy -> GLiNER2 -> LLM
             entity_types=OMG_ENTITY_TYPES,
             extract_preferences=True,
-            gliner_model="urchade/gliner_medium-v2.1",
+            gliner_model="fastino/gliner2.5-base-v1",
             spacy_model="en_core_web_sm",
-            llm_fallback_model=os.getenv("OPENAI_MODEL", "gpt-5"),
+            llm_model=os.getenv("OPENAI_MODEL", "gpt-5"),
         ),
         embedding=EmbeddingConfig(
             provider="openai",

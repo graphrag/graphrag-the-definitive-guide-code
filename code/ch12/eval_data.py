@@ -21,22 +21,23 @@ GOLD_ARTICLE = (
 # Hand-curated by a domain expert. IDs use the ALL-CAPS-HYPHENATED form the
 # ontology prompt asks for; types match the ``EntityType`` enum.
 GOLD_ENTITIES = [
-    {"id": "MICROSOFT",                                  "type": "ORGANIZATION"},
-    {"id": "ACTIVISION-BLIZZARD",                        "type": "ORGANIZATION"},
-    {"id": "SATYA-NADELLA",                              "type": "PERSON"},
-    {"id": "US-FEDERAL-TRADE-COMMISSION",                "type": "ORGANIZATION"},
-    {"id": "UK-COMPETITION-AND-MARKETS-AUTHORITY",       "type": "ORGANIZATION"},
-    {"id": "MICROSOFT-ACTIVISION-BLIZZARD-ACQUISITION",  "type": "EVENT"},
+    {"id": "MICROSOFT", "type": "ORGANIZATION"},
+    {"id": "ACTIVISION-BLIZZARD", "type": "ORGANIZATION"},
+    {"id": "SATYA-NADELLA", "type": "PERSON"},
+    {"id": "US-FEDERAL-TRADE-COMMISSION", "type": "ORGANIZATION"},
+    {"id": "UK-COMPETITION-AND-MARKETS-AUTHORITY", "type": "ORGANIZATION"},
+    {"id": "MICROSOFT-ACTIVISION-BLIZZARD-ACQUISITION", "type": "EVENT"},
 ]
 
 # Typed triples: (source, relationship_type, target). The relationship_type
 # matches the ``RelationshipType`` enum and obeys the ontology's domain/range.
+ACQUISITION = "MICROSOFT-ACTIVISION-BLIZZARD-ACQUISITION"
 GOLD_RELATIONSHIPS = [
-    ("MICROSOFT",                            "ACQUIRED",    "ACTIVISION-BLIZZARD"),
-    ("MICROSOFT",                            "LED_BY",      "SATYA-NADELLA"),
-    ("MICROSOFT",                            "INVOLVED_IN", "MICROSOFT-ACTIVISION-BLIZZARD-ACQUISITION"),
-    ("ACTIVISION-BLIZZARD",                  "INVOLVED_IN", "MICROSOFT-ACTIVISION-BLIZZARD-ACQUISITION"),
-    ("US-FEDERAL-TRADE-COMMISSION",          "REVIEWED",    "MICROSOFT-ACTIVISION-BLIZZARD-ACQUISITION"),
-    ("UK-COMPETITION-AND-MARKETS-AUTHORITY", "REVIEWED",    "MICROSOFT-ACTIVISION-BLIZZARD-ACQUISITION"),
+    ("MICROSOFT", "ACQUIRED", "ACTIVISION-BLIZZARD"),
+    ("MICROSOFT", "LED_BY", "SATYA-NADELLA"),
+    ("MICROSOFT", "INVOLVED_IN", ACQUISITION),
+    ("ACTIVISION-BLIZZARD", "INVOLVED_IN", ACQUISITION),
+    ("US-FEDERAL-TRADE-COMMISSION", "REVIEWED", ACQUISITION),
+    ("UK-COMPETITION-AND-MARKETS-AUTHORITY", "REVIEWED", ACQUISITION),
 ]
 # end::kg_gold[]

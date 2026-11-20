@@ -16,12 +16,18 @@ driver = GraphDatabase.driver(URI, auth=(USERNAME, PASSWORD))
 def setup_domain_schema():
     with driver.session() as session:
         constraints = [
-            "CREATE CONSTRAINT IF NOT EXISTS FOR (p:Person) REQUIRE p.id IS UNIQUE",
-            "CREATE CONSTRAINT IF NOT EXISTS FOR (p:Project) REQUIRE p.id IS UNIQUE",
-            "CREATE CONSTRAINT IF NOT EXISTS FOR (c:Client) REQUIRE c.id IS UNIQUE",
-            "CREATE CONSTRAINT IF NOT EXISTS FOR (s:Skill) REQUIRE s.id IS UNIQUE",
-            "CREATE CONSTRAINT IF NOT EXISTS FOR (t:Technology) REQUIRE t.id IS UNIQUE",
-            "CREATE CONSTRAINT IF NOT EXISTS FOR (i:Industry) REQUIRE i.id IS UNIQUE"
+            "CREATE CONSTRAINT IF NOT EXISTS "
+            "FOR (p:Person) REQUIRE p.id IS UNIQUE",
+            "CREATE CONSTRAINT IF NOT EXISTS "
+            "FOR (p:Project) REQUIRE p.id IS UNIQUE",
+            "CREATE CONSTRAINT IF NOT EXISTS "
+            "FOR (c:Client) REQUIRE c.id IS UNIQUE",
+            "CREATE CONSTRAINT IF NOT EXISTS "
+            "FOR (s:Skill) REQUIRE s.id IS UNIQUE",
+            "CREATE CONSTRAINT IF NOT EXISTS "
+            "FOR (t:Technology) REQUIRE t.id IS UNIQUE",
+            "CREATE CONSTRAINT IF NOT EXISTS "
+            "FOR (i:Industry) REQUIRE i.id IS UNIQUE"
         ]
         
         for constraint in constraints:

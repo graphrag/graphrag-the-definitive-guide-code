@@ -35,10 +35,11 @@ EVAL_QUESTIONS = [
             "governance or machine learning skills?"
         ),
         "reference": (
-            "Sarah Johnson is the only matching consultant. She has both Data Governance "
-            "and Machine Learning skills, and worked on four healthcare-industry projects: "
-            "Healthcare Data Modernization, Healthcare AI Implementation, Healthcare "
-            "GraphRAG Implementation, and Healthcare Knowledge Management."
+            "Sarah Johnson is the only matching consultant. She has both Data "
+            "Governance and Machine Learning skills, and worked on four "
+            "healthcare-industry projects: Healthcare Data Modernization, "
+            "Healthcare AI Implementation, Healthcare GraphRAG Implementation, "
+            "and Healthcare Knowledge Management."
         ),
         "expected_tools_any": ["read-cypher"],
     },

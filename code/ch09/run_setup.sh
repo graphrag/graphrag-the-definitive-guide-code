@@ -2,7 +2,7 @@
 # run_setup.sh -- one-shot bootstrap for chapter 9.
 #
 # Assumes chapter 8's data has already been imported. This script:
-#   1. Installs chapter 9 requirements (adds neo4j-agent-memory >=0.2.0).
+#   1. Installs chapter 9 requirements (adds neo4j-agent-memory >=0.7).
 #   2. Runs the OMG graph adoption (adds :Entity / type / id properties
 #      to existing OMG nodes via client.schema.adopt_existing_graph).
 #   3. The library creates its own constraints and indexes on first

@@ -2,6 +2,6 @@ neo4j
 openai
 streamlit
 python-dotenv
-mcp
+mcp<2
 pandas
-neo4j-agent-memory[all]>=0.2.0
+neo4j-agent-memory[full]>=0.7

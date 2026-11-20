@@ -51,7 +51,8 @@ The required structured JSON output format is:
 
 ```json
 entities:[
-    {{type:"Type", id:"consistent-id", attributes: {{key: "value", key2: value2}}}}
+    {{type:"Type", id:"consistent-id",
+      attributes: {{key: "value", key2: value2}}}}
 ],
 relationships:[
     {{type:"TYPE", sourceId:"source-id", sourceType:"SourceType",
@@ -75,8 +76,10 @@ an empty JSON object `{{}}`.
 """
 
 EXTRACTION_PROMPT = """
-Extract entities and relationships from the given text, optional attributes can be added to the entities and relationships. 
-Optional attributes indicated in square brackets `{{name:String, [...]}}` in the schema attribute definitions.
+Extract entities and relationships from the given text,
+optional attributes can be added to the entities and relationships. 
+Optional attributes indicated in square brackets `{{name:String, [...]}}`
+in the schema attribute definitions.
 
 {text}
 """
@@ -119,7 +122,8 @@ class FlexibleAttribute(BaseModel):
     value: str
 
 #class FlexibleAttributes(BaseModel):
-#    model_config = ConfigDict(extra="allow", json_schema_extra={"additionalProperties": True})
+#    model_config = ConfigDict(extra="allow",
+#        json_schema_extra={"additionalProperties": True})
 
 class Entity(BaseModel):
     type: str
@@ -143,7 +147,8 @@ class ExtractionResponse(BaseModel):
 def extract_entities(chunk_text, schema, existing_entities):
     system_prompt = SYSTEM_PROMPT.format(
         schema=schema,
-        existing_entities=json.dumps(existing_entities, indent=2, default=lambda o: str(o)),
+        existing_entities=json.dumps(existing_entities, indent=2,
+                                     default=lambda o: str(o)),
     )
     user_prompt = EXTRACTION_PROMPT.format(
         text=chunk_text
@@ -159,7 +164,8 @@ def extract_entities(chunk_text, schema, existing_entities):
         extracted_data = response.output_parsed
         return {
             "entities": [e.model_dump() for e in extracted_data.entities],
-            "relationships": [r.model_dump() for r in extracted_data.relationships]
+            "relationships": [r.model_dump()
+                              for r in extracted_data.relationships]
         }
     except Exception as e:
         print(f"Error parsing LLM response: {e}")
@@ -193,7 +199,7 @@ def link_entities_to_chunk(chunk_id, entities, relationships):
                     ON CREATE SET r += coalesce(rel.attributes,{})
                     """, {"relationships": [rel]})
                 except Exception as e:
-                    print(f"Error for relationshiop {rel} - {e}")
+                    print(f"Error for relationship {rel} - {e}")
 
 # end::linking[]
 
@@ -212,11 +218,13 @@ def process_all_chunks():
             MATCH (c:Chunk&!Processed) 
             RETURN c.id AS id, c.text AS text // LIMIT 2
         """)
-        chunks = [{"id": record["id"], "text": record["text"]} for record in chunk_results.records]
+        chunks = [{"id": record["id"], "text": record["text"]}
+                  for record in chunk_results.records]
 
         for chunk in tqdm(chunks, desc="Processing chunks"):
             results = extract_entities(chunk["text"], SCHEMA, entities)
-            link_entities_to_chunk(chunk["id"], results['entities'], results['relationships'])
+            link_entities_to_chunk(chunk["id"], results['entities'],
+                                   results['relationships'])
 # end::process[]
 
 def get_chunk_count():

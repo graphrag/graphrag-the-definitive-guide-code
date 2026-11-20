@@ -21,7 +21,7 @@ async def connect_mcp(exit_stack: AsyncExitStack) -> ClientSession:
     """Launch neo4j-mcp as a subprocess and return a live session."""
     params = StdioServerParameters(
         command="uvx",
-        args=["neo4j-mcp-server", "--neo4j-transport-mode", "stdio"],
+        args=["neo4j-mcp-server@1.6.1", "--neo4j-transport-mode", "stdio"],
         env=MCP_ENV,
     )
     read, write = await exit_stack.enter_async_context(stdio_client(params))

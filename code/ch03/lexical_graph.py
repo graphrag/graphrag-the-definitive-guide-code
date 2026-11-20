@@ -23,10 +23,12 @@ openai = OpenAI(api_key=OPENAI_API_KEY)
 def setup_schema():
     with driver.session() as session:
         session.run("""
-        CREATE CONSTRAINT chunk_id IF NOT EXISTS FOR (c:Chunk) REQUIRE c.id IS UNIQUE
+        CREATE CONSTRAINT chunk_id IF NOT EXISTS
+        FOR (c:Chunk) REQUIRE c.id IS UNIQUE
         """)
         session.run("""
-        CREATE CONSTRAINT document_fileName IF NOT EXISTS FOR (d:Document) REQUIRE d.fileName IS UNIQUE
+        CREATE CONSTRAINT document_fileName IF NOT EXISTS
+        FOR (d:Document) REQUIRE d.fileName IS UNIQUE
         """)
         # Create vector index for embeddings
         session.run("""
@@ -35,7 +37,8 @@ def setup_schema():
         OPTIONS { indexConfig: { `vector.dimensions`: 1536,
             `vector.similarity_function`: 'cosine'
           } } """)
-        # Enforce FLOAT32 precision and 1536 dimensions on the embedding property
+        # Enforce FLOAT32 precision and 1536 dimensions
+        # on the embedding property
         session.run("""
         CREATE CONSTRAINT chunk_embedding_type IF NOT EXISTS
         FOR (c:Chunk) REQUIRE c.embedding IS :: VECTOR<FLOAT32>(1536)

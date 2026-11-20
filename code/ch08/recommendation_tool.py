@@ -13,21 +13,25 @@ def register_recommendation_tool(schemas: list[dict], executors: dict):
             WHERE tech.name IN $requiredTechnologies
             WITH c, ind, COLLECT(tech) AS techs
             UNWIND techs AS tech
-            OPTIONAL MATCH (tech)<-[:SKILL_FOR]-(s:Skill)<-[:HAS_SKILL]-(person:Person)
+            OPTIONAL MATCH (tech)<-[:SKILL_FOR]-(s:Skill)
+              <-[:HAS_SKILL]-(person:Person)
             WITH c, ind, tech, person,
-                 CASE WHEN person IS NOT NULL THEN 1 ELSE 0 END AS hasDirectSkill
-            OPTIONAL MATCH (person)-[:WORKED_ON]->(pp:Project)-[:FOR_CLIENT]->(cc:Client)
-              -[:IN_INDUSTRY]->(ind)
-            WITH person, tech,
+                 CASE WHEN person IS NOT NULL THEN 1 ELSE 0 END
+                   AS hasDirectSkill
+            OPTIONAL MATCH (person)-[:WORKED_ON]->(pp:Project)
+              -[:FOR_CLIENT]->(cc:Client)-[:IN_INDUSTRY]->(ind)
+            WITH c, person, tech,
                  hasDirectSkill,
-                 CASE WHEN pp IS NOT NULL THEN 1 ELSE 0 END AS industryExperience,
+                 CASE WHEN pp IS NOT NULL THEN 1 ELSE 0 END
+                   AS industryExperience,
                  COUNT(DISTINCT pp) AS priorIndustryProjects
-            OPTIONAL MATCH (person)-[:WORKED_ON]->(cp:Project)-[:FOR_CLIENT]->(c)
             WITH person,
                  SUM(hasDirectSkill) AS skillMatches,
                  SUM(industryExperience) AS industryBoost,
                  SUM(priorIndustryProjects) AS totalIndustryProjects,
-                 CASE WHEN cp IS NOT NULL THEN 2 ELSE 0 END AS clientFamiliarity
+                 CASE WHEN EXISTS {
+                   (person)-[:WORKED_ON]->(:Project)-[:FOR_CLIENT]->(c)
+                 } THEN 2 ELSE 0 END AS clientFamiliarity
             WHERE person IS NOT NULL
             RETURN person.full_name AS candidate,
                    skillMatches,

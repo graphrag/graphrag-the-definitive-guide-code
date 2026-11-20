@@ -85,9 +85,11 @@ class GraphRAGRetriever:
 # end::vector_retriever[]
 
 # tag::vector_entity_retriever[]
-    def vector_chunk_entity_retrieval(self, query: str, top_k: int = 5) -> List[Dict]:
+    def vector_chunk_entity_retrieval(self, query: str,
+                                      top_k: int = 5) -> List[Dict]:
         """
-        Vector search for chunks, then expand to directly related entities and related entities
+        Vector search for chunks, then expand to directly related entities
+        and related entities
         """
         query_embedding = get_openai_embedding(query)
         with self.driver.session() as session:
@@ -108,7 +110,8 @@ class GraphRAGRetriever:
                 sourceType:[l IN labels(e) WHERE l <> '__Entity__'][0],
                 rel:type(rel),
                 target:e2.id,
-                targetType:[l IN labels(e2) WHERE l <> '__Entity__'][0]}) AS entities
+                targetType:[l IN labels(e2) WHERE l <> '__Entity__'][0]})
+                AS entities
             RETURN c.id AS id, c.text AS text, c.source AS source, score, entities
             """, {"embedding": query_embedding, "top_k": top_k})
             docs = []
@@ -116,7 +119,8 @@ class GraphRAGRetriever:
                 entities_str = ""
                 if record["entities"]:
                     entities_str += "\nEntities: " + ", ".join([
-                        f"({e['sourceType']}:{e['source']}) ({e['rel']}) ({e['targetType']}:{e['target']})"
+                        f"({e['sourceType']}:{e['source']}) ({e['rel']}) "
+                        f"({e['targetType']}:{e['target']})"
                         for e in record["entities"] if e
                     ])
                 docs.append({
@@ -136,13 +140,15 @@ class GraphRAGApp:
         self.retriever = GraphRAGRetriever(driver)
 
 # tag::answer_question[]
-    def answer_question(self, question: str, retrieval_method: str = "vector") -> Dict[str, Any]:
+    def answer_question(self, question: str,
+                        retrieval_method: str = "vector") -> Dict[str, Any]:
         """
         Answer a query using the specified retrieval method and OpenAI LLM
 
         retrieval_method options:
         - "vector": Basic vector similarity search
-        - "vector_entity": Vector search, then expand to entities and related entities
+        - "vector_entity": Vector search, then expand to entities and
+          related entities
         """
         if retrieval_method == "vector":
             docs = self.retriever.vector_retrieval(question)

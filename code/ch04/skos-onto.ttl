@@ -31,7 +31,8 @@
 
 :operatesAt a rdf:Property ;
   rdfs:label "operates at"@en ;
-  rdfs:comment "Relates the concept of Aircraft to the concept of Airport (OPERATES_AT)."@en ;
+  rdfs:comment
+  "Relates the concept of Aircraft to the concept of Airport (OPERATES_AT)."@en;
   rdfs:subPropertyOf skos:related ;
   rdfs:domain skos:Concept ;
   rdfs:range skos:Concept .
