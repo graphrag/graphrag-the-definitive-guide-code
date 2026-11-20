@@ -1,4 +1,4 @@
-"""OMG-specific glue around `neo4j-agent-memory` v0.2.0.
+"""OMG-specific glue around `neo4j-agent-memory` (v0.7 or later).
 
 In v0.1.x this module wrapped a great deal of the library's behavior: it
 created a `:User` node by hand, wrote `(:User)-[:HAS_CONVERSATION]->(:Conversation)`
@@ -29,7 +29,9 @@ def _names_from_json(json_str: str, key: str) -> list[str]:
     return [v for k, v in _NAME_RE.findall(json_str) if k == key]
 
 
-def infer_touched_entities(tool_name: str, args: dict, result: Any) -> list[EntityRef]:
+def infer_touched_entities(
+    tool_name: str, args: dict, result: Any
+) -> list[EntityRef]:
     """Map an OMG tool call to the long-term entities it referenced.
 
     The agent already knows which arguments name which entity types --
@@ -87,9 +89,10 @@ async def load_user_context(
     half traverses the graph directly because there's no equivalent
     high-level helper for "successful traces touching :Industry X."
     """
-    prefs = await client.long_term.get_preferences(
+    prefs = await client.long_term.get_preferences_for(
         user_identifier=user_email,
-        applies_to=EntityRef(name=industry, type="Industry") if industry else None,
+        applies_to=EntityRef(name=industry, type="Industry")
+            if industry else None,
         active_only=True,
     )
 
@@ -101,15 +104,18 @@ async def load_user_context(
         WHERE rt.success = true
           AND ($industry IS NULL OR i.name = $industry)
           AND rt.completed_at >= datetime() - duration({days: 30})
-        RETURN DISTINCT rt.task AS task, rt.outcome AS outcome
+        WITH DISTINCT rt
         ORDER BY rt.completed_at DESC
         LIMIT 5
+        RETURN rt.task AS task, rt.outcome AS outcome
         """,
         {"email": user_email, "industry": industry},
     )
 
     return {
         "preferences": [p.preference for p in prefs],
-        "recent_wins": [{"task": r["task"], "outcome": r["outcome"]} for r in rows],
+        "recent_wins": [
+            {"task": r["task"], "outcome": r["outcome"]} for r in rows
+        ],
     }
 # end::bootstrap[]

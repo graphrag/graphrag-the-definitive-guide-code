@@ -1,6 +1,7 @@
 // queries.cypher
 //
-// The three "memory-augmented retrieval" queries from chapter 9, section 6.
+// The three "memory-augmented retrieval" queries from chapter 9, in the
+// Memory-Augmented Retrieval section.
 // Each one closes a loop on a frustration from the chapter's cold open.
 
 
@@ -11,7 +12,7 @@
 //
 // One hop from the Client into reasoning, made possible by the :TOUCHED edges
 // the agent loop writes after each tool call. Without :TOUCHED this is a
-// three-hop path through Message and the audit query is far less elegant.
+// three-hop path through Message, and the audit query is far less elegant.
 
 MATCH (c:Client {name: $client_name})<-[:TOUCHED]-(step:ReasoningStep)
       <-[:HAS_STEP]-(trace:ReasoningTrace)
@@ -38,14 +39,15 @@ ORDER BY when DESC;
 //
 // At the start of every Sara session in the agent loop, fold her preferences
 // for the relevant industry and her recent successful traces in that industry
-// into the system prompt. All three regions touched in one query.
+// into the system prompt. Long-term and reasoning memory in one query.
 
 MATCH (u:User {identifier: $identifier})
-OPTIONAL MATCH (u)-[:HAS_PREFERENCE]->(p:Preference)-[:APPLIES_TO]->(:Industry {name: $industry})
+OPTIONAL MATCH (u)-[:HAS_PREFERENCE]->(p:Preference)
+               -[:APPLIES_TO]->(:Industry {name: $industry})
 WITH u, collect(DISTINCT p.preference) AS preferences
 CALL {
   WITH u
-  MATCH (u)-[:HAS_CONVERSATION]->(:Conversation)-[:HAS_TRACE]->(rt:ReasoningTrace)
+  MATCH (u)-[:HAS_TRACE]->(rt:ReasoningTrace)
         -[:HAS_STEP]->(:ReasoningStep)-[:TOUCHED]->(:Client)
         -[:IN_INDUSTRY]->(:Industry {name: $industry})
   WHERE rt.success = true
@@ -69,14 +71,17 @@ RETURN preferences, recent_wins;
 // ReasoningTrace. The result is a small set of analogous past reasoning
 // trajectories the agent can pre-load into context.
 
-WITH genai.vector.encode($task_query, "OpenAI", {token: $openai_key}) AS q
-CALL db.index.vector.queryNodes("trace_task_embedding", 5, q) YIELD node AS rt, score
+WITH genai.vector.encode($task_query, "OpenAI",
+       {token: $openai_key, model: "text-embedding-3-small"}) AS q
+CALL db.index.vector.queryNodes("task_embedding_idx", 5, q)
+  YIELD node AS rt, score
 WHERE rt.success = true
 MATCH (rt)-[:HAS_STEP]->(step:ReasoningStep)-[:USES_TOOL]->(tc:ToolCall)
 WITH rt, score, step, tc
 ORDER BY rt.task, step.step_number ASC
 WITH rt, score,
-     collect({step: step.step_number, tool: tc.tool_name, args: tc.arguments})[..10] AS tool_path
+     collect({step: step.step_number, tool: tc.tool_name,
+              args: tc.arguments})[..10] AS tool_path
 RETURN rt.task                     AS task,
        rt.outcome                  AS outcome,
        score                       AS similarity,
@@ -87,15 +92,17 @@ ORDER BY similarity DESC;
 
 // ── Query C, library-wrapper form ─────────────────────────────────────────
 //
-// Equivalent to the raw cypher above, but using the library's
-// reasoning.search_traces helper. Prefer this form in application code; the
-// raw form above is what the wrapper compiles to.
+// The library's reasoning.get_similar_traces helper runs the same vector
+// search as the raw Cypher above, but it also drops matches with a similarity
+// score below 0.7 (its default threshold) and returns the traces without
+// their tool-call paths. Prefer this form in application code; use the raw
+// form when you need the tool paths.
 //
 // (This block is run from Python, not Cypher; included here as documentation.)
 //
 // async with MemoryClient(settings) as client:
-//     results = await client.reasoning.search_traces(
-//         query="Staff a senior team for a healthcare migration",
+//     results = await client.reasoning.get_similar_traces(
+//         task="Staff a senior team for a healthcare migration",
 //         limit=5,
 //         success_only=True,
 //     )
