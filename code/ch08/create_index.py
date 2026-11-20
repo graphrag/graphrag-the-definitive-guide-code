@@ -36,7 +36,8 @@ def create_ft_index():
     with driver.session() as session:
         # Create person nodes and management relationships
         session.run("""
-        CREATE FULLTEXT INDEX client_name_index IF NOT EXISTS FOR (c:Client) ON EACH [c.name]
+        CREATE FULLTEXT INDEX client_name_index IF NOT EXISTS
+        FOR (c:Client) ON EACH [c.name]
                     """)
         print(f"Created full-text index on Client nodes")
 
