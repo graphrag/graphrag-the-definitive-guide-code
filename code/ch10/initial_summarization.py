@@ -4,11 +4,16 @@ from utils import driver, get_embedding, oai_client
 
 # tag::summarize_prompt[]
 SUMMARIZE_PROMPT = """
-You are a helpful assistant responsible for generating a comprehensive summary of the data provided below.
-Given one or more entities, and a list of descriptions, all related to the same entity or group of entities.
-Please concatenate all of these into a single, comprehensive description. Make sure to include information collected from all the descriptions.
-If the provided descriptions are contradictory, please resolve the contradictions and provide a single, coherent summary.
-Make sure it is written in third person, and include the entity names so we have the full context.
+You are a helpful assistant responsible for generating a comprehensive summary
+of the data provided below.
+Given one or more entities, and a list of descriptions, all related to the same
+entity or group of entities.
+Please concatenate all of these into a single, comprehensive description.
+Make sure to include information collected from all the descriptions.
+If the provided descriptions are contradictory, please resolve the
+contradictions and provide a single, coherent summary.
+Make sure it is written in third person, and include the entity names
+so we have the full context.
 Limit the final description length to {max_length} words.
 
 #######
@@ -54,7 +59,8 @@ async def summarize_node(
         messages=[
             {
                 "role": "system",
-                "content": "You are an expert data extraction assistant. Follow formatting strictly.",
+                "content": "You are an expert data extraction assistant. "
+                           "Follow formatting strictly.",
             },
             {"role": "user", "content": prompt},
         ],
@@ -115,7 +121,8 @@ async def summarize_rel(
         messages=[
             {
                 "role": "system",
-                "content": "You are an expert data extraction assistant. Follow formatting strictly.",
+                "content": "You are an expert data extraction assistant. "
+                           "Follow formatting strictly.",
             },
             {"role": "user", "content": prompt},
         ],

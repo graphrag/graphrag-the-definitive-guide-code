@@ -4,11 +4,10 @@ from utils import driver, get_embedding
 
 def create_relationship_index():
     driver.execute_query(
-        # tag::cypher[]
-        """
+        """// tag::cypher[]
     CREATE VECTOR INDEX relationshipSummary IF NOT EXISTS
-        FOR ()-[r:RELATIONSHIP_SUMMARY]-() ON (r.embedding)"""
-        # end::cypher[]
+        FOR ()-[r:RELATIONSHIP_SUMMARY]-() ON (r.embedding)
+        """  # end::cypher[]
     )
 
 # tag::search[]

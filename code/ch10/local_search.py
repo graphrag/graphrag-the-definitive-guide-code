@@ -4,11 +4,11 @@ from utils import driver, get_embedding
 
 def create_entity_index():
     driver.execute_query(
-        # tag::cypher[]
-        """CREATE VECTOR INDEX entitySummary IF NOT EXISTS
+        """// tag::cypher[]
+    CREATE VECTOR INDEX entitySummary IF NOT EXISTS
     FOR (m:__Entity__)
-    ON m.embedding"""
-        # end::cypher[]
+    ON m.embedding
+        """  # end::cypher[]
     )
 
 # tag::search[]

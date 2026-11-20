@@ -109,8 +109,7 @@ async def main():
     if all_merges:
         print("\nMerging nodes in Neo4j...")
         driver.execute_query(
-            # tag::cypher[]
-            """
+            """// tag::cypher[]
             UNWIND $groups AS group
             MATCH (e:__Entity__) WHERE e.id IN group
             WITH group, collect(e) AS nodes
@@ -122,8 +121,7 @@ async def main():
             )
             YIELD node
             RETURN count(node) AS merged
-            """,
-            # end::cypher[]
+            """,  # end::cypher[]
             groups=all_merges,
         )
         print("Done.")

@@ -15,7 +15,7 @@ MAX_CONCURRENCY = 4
 DEFAULT_ARTICLES_PATH = "../../data/ch10/articles_initial.csv"
 
 # tag::cypher[]
-# Each entity is materialized with two labels: the typed label (e.g. PERSON)
+# Each entity is materialized with two labels: the typed label (e.g., PERSON)
 # AND __Entity__. Leiden later projects __Entity__ uniformly; retrieval can
 # still filter or rank by the typed label.
 NODES_QUERY = """
@@ -240,7 +240,9 @@ Article:
 
 
 # tag::extraction[]
-async def extract_row(sem: asyncio.Semaphore, index: int, row: dict) -> dict | None:
+async def extract_row(
+    sem: asyncio.Semaphore, index: int, row: dict
+) -> dict | None:
     """Run typed extraction against one article using structured outputs.
 
     chat.completions.parse puts the SDK in structured-output mode: the
@@ -292,7 +294,8 @@ async def extract_row(sem: asyncio.Semaphore, index: int, row: dict) -> dict | N
 
             if entities or relationships:
                 print(
-                    f" -> Row {index + 1}: {len(entities)} nodes, {len(relationships)} edges."
+                    f" -> Row {index + 1}: {len(entities)} nodes, "
+                    f"{len(relationships)} edges."
                 )
                 return {
                     "row": row,
