@@ -3,7 +3,7 @@
 Re-uses Chapter 8's agent loop (``agent.py``), its three custom tools
 (``vector_search_projects``, ``fulltext_search_clients``, ``recommend_team``),
 and the same neo4j-mcp subprocess that ch08 itself talks to for
-``get_neo4j_schema`` and ``read_neo4j_cypher``. ``NEO4J_READ_ONLY=true`` in
+``get-schema`` and ``read-cypher``. ``NEO4J_READ_ONLY=true`` in
 ``mcp_connect.MCP_ENV`` keeps the benchmark from mutating the graph it
 scores against.
 
@@ -75,7 +75,7 @@ async def setup_tools(exit_stack: AsyncExitStack) -> tuple[list[dict], dict]:
     """Assemble the full tool registry the agent will see during the eval.
 
     Schema + Cypher come from the same neo4j-mcp subprocess ch08 uses in
-    production; the three specialised tools are registered in-process from
+    production; the three specialized tools are registered in-process from
     ch08's modules. Running both through the real MCP wiring means the
     benchmark exercises the deployed tool surface, not a re-implementation
     that could drift from it.
@@ -92,15 +92,18 @@ async def setup_tools(exit_stack: AsyncExitStack) -> tuple[list[dict], dict]:
 
 
 # tag::answer_judge_prompts[]
-CORRECTNESS_PROMPT = """Grade the factual correctness of a candidate answer against a reference answer.
+CORRECTNESS_PROMPT = """\
+Grade the factual correctness of a candidate answer against a reference answer.
 
-Score whether the claims the candidate makes are factually right. A short answer that gets
-its facts right is correct; missing facts are scored separately as completeness. Wrong
-claims, hallucinations, or contradictions of the reference all hurt this score.
+Score whether the claims the candidate makes are factually right. A short answer
+that gets its facts right is correct; missing facts are scored separately as
+completeness. Wrong claims, hallucinations, or contradictions of the reference
+all hurt this score.
 
 Return JSON: {{"score": <0-5 int>, "reason": "<one sentence>"}}
 
-Scoring: 5=all claims correct; 3=mostly correct with minor inaccuracies; 1=more wrong than right; 0=completely wrong or refused.
+Scoring: 5=all claims correct; 3=mostly correct with minor inaccuracies;
+1=more wrong than right; 0=completely wrong or refused.
 
 -Reference-
 {reference}
@@ -109,15 +112,17 @@ Scoring: 5=all claims correct; 3=mostly correct with minor inaccuracies; 1=more 
 """
 
 
-COMPLETENESS_PROMPT = """Grade how completely a candidate answer covers the facets in the reference.
+COMPLETENESS_PROMPT = """\
+Grade how completely a candidate answer covers the facets in the reference.
 
-List the distinct facts or facets in the reference, then check which of them the candidate
-mentions. The score reflects the share of facets covered. Extra detail beyond the reference
-neither helps nor hurts.
+List the distinct facts or facets in the reference, then check which of them the
+candidate mentions. The score reflects the share of facets covered. Extra detail
+beyond the reference neither helps nor hurts.
 
 Return JSON: {{"score": <0-5 int>, "reason": "<one sentence>"}}
 
-Scoring: 5=covers every facet; 3=covers most facets, some omissions; 1=covers a small fraction; 0=covers nothing.
+Scoring: 5=covers every facet; 3=covers most facets, some omissions;
+1=covers a small fraction; 0=covers nothing.
 
 -Reference-
 {reference}
@@ -126,14 +131,18 @@ Scoring: 5=covers every facet; 3=covers most facets, some omissions; 1=covers a 
 """
 
 
-RELEVANCE_PROMPT = """Grade whether a candidate answer addresses the question that was asked.
+RELEVANCE_PROMPT = """\
+Grade whether a candidate answer addresses the question that was asked.
 
-A relevant answer responds to the question, even if it does so incompletely or with mistakes.
-An irrelevant answer drifts off-topic, refuses without justification, or answers a different question.
+A relevant answer responds to the question, even if it does so incompletely or
+with mistakes.
+An irrelevant answer drifts off-topic, refuses without justification, or answers
+a different question.
 
 Return JSON: {{"score": <0-5 int>, "reason": "<one sentence>"}}
 
-Scoring: 5=directly addresses the question; 3=addresses most of it; 1=loosely related; 0=off-topic or refused.
+Scoring: 5=directly addresses the question; 3=addresses most of it;
+1=loosely related; 0=off-topic or refused.
 
 -Question-
 {question}
@@ -157,7 +166,8 @@ async def score_relevance(question: str, candidate: str) -> dict:
 
 # tag::process_metrics[]
 def trajectory_match(expected_any: list[str], calls: list[dict]) -> bool:
-    """Any-order match: at least one of the expected tools appeared in the trace."""
+    """Any-order match: at least one of the expected tools appeared in the
+    trace."""
     if not expected_any:
         return True
     called = {c["name"] for c in calls}
@@ -168,7 +178,7 @@ def tool_correctness(forbidden: list[str], calls: list[dict]) -> float:
     """Fraction of tool calls that aren't in the per-question forbidden set.
 
     Tool correctness is a deterministic check: each question lists the tools
-    that would be inappropriate to call (e.g. ``get_neo4j_schema`` for a
+    that would be inappropriate to call (e.g. ``get-schema`` for a
     question that doesn't need Cypher). 1.0 means every call was permitted;
     lower values flag wasted hops.
     """
@@ -182,7 +192,9 @@ def tool_correctness(forbidden: list[str], calls: list[dict]) -> float:
 
 
 # tag::run[]
-async def run_one(q: dict, client: OpenAI, schemas: list[dict], executors: dict) -> dict:
+async def run_one(
+    q: dict, client: OpenAI, schemas: list[dict], executors: dict
+) -> dict:
     """Run one question through the agent and score the trace.
 
     Answer-quality metrics (correctness, completeness, relevance) come
@@ -190,7 +202,8 @@ async def run_one(q: dict, client: OpenAI, schemas: list[dict], executors: dict)
     well. Process metrics come second; they tell us *how* it got there,
     which is what makes an expensive agent operable in production.
     """
-    answer, calls, _ = await agent_loop(q["question"], client, schemas, executors)
+    answer, calls, _ = await agent_loop(q["question"], client, schemas,
+                                        executors)
 
     correctness, completeness, relevance = await asyncio.gather(
         score_correctness(q["reference"], answer),
@@ -208,12 +221,15 @@ async def run_one(q: dict, client: OpenAI, schemas: list[dict], executors: dict)
         "relevance":           relevance["score"],
         # Agent process (deterministic checks over the trace).
         "task_completion":     bool(answer and answer.strip()),
-        "trajectory_match":    trajectory_match(q.get("expected_tools_any", []), calls),
-        "tool_correctness":    tool_correctness(q.get("forbidden_tools", []), calls),
+        "trajectory_match":    trajectory_match(q.get("expected_tools_any", []),
+                                                calls),
+        "tool_correctness":    tool_correctness(q.get("forbidden_tools", []),
+                                                calls),
         "n_tool_calls":        len(calls),
         # Full call trace (name + args) so two eval runs can be diffed:
         # which arguments shifted when a model or prompt change moves a score?
-        "tool_calls":          [{"name": c["name"], "args": c["args"]} for c in calls],
+        "tool_calls":          [{"name": c["name"], "args": c["args"]}
+                                for c in calls],
     }
 # end::run[]
 

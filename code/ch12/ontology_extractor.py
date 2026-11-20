@@ -38,12 +38,12 @@ _ID_PATTERN = re.compile(r"^[A-Z0-9][A-Z0-9-]*$")
 
 
 def _canonical_id(value: str) -> str:
-    """Normalise an entity id to the ALL-CAPS-HYPHENATED form.
+    """Normalize an entity id to the ALL-CAPS-HYPHENATED form.
 
     The model is told to emit canonical ids in the prompt, but the prompt
     does not strictly bind the model -- in practice we still see
     "SATYA NADELLA" sneak through when the only example in the source
-    text uses spaces. Normalising in a Pydantic validator means a single
+    text uses spaces. Normalizing in a Pydantic validator means a single
     canonical form lands in the graph regardless of model variance.
     """
     cleaned = re.sub(r"\s+", "-", value.strip()).upper()
@@ -73,11 +73,14 @@ class RelationshipType(str, Enum):
 RELATIONSHIP_CONSTRAINTS: dict[
     RelationshipType, tuple[set[EntityType], set[EntityType]]
 ] = {
-    RelationshipType.ACQUIRED:    ({EntityType.ORGANIZATION}, {EntityType.ORGANIZATION}),
-    RelationshipType.LED_BY:      ({EntityType.ORGANIZATION}, {EntityType.PERSON}),
+    RelationshipType.ACQUIRED:    ({EntityType.ORGANIZATION},
+                                   {EntityType.ORGANIZATION}),
+    RelationshipType.LED_BY:      ({EntityType.ORGANIZATION},
+                                   {EntityType.PERSON}),
     RelationshipType.INVOLVED_IN: ({EntityType.PERSON, EntityType.ORGANIZATION},
                                    {EntityType.EVENT}),
-    RelationshipType.REVIEWED:    ({EntityType.ORGANIZATION}, {EntityType.EVENT}),
+    RelationshipType.REVIEWED:    ({EntityType.ORGANIZATION},
+                                   {EntityType.EVENT}),
 }
 
 
@@ -90,7 +93,8 @@ class Entity(BaseModel):
     type: EntityType
     description: str = Field(
         ...,
-        description=("One-sentence factual description grounded in the article. "
+        description=("One-sentence factual description grounded "
+                     "in the article. "
                      "Do not add outside knowledge."),
     )
 
@@ -176,7 +180,8 @@ async def extract_typed(
         model=model,
         messages=[
             {"role": "system",
-             "content": "You extract knowledge graphs that match the supplied ontology."},
+             "content": ("You extract knowledge graphs that match the "
+                         "supplied ontology.")},
             {"role": "user",
              "content": ONTOLOGY_PROMPT.format(article=article)},
         ],
@@ -194,13 +199,13 @@ def validate_ontology(extraction: Extraction) -> dict:
 
     * **Duplicate ids**: two extracted entities share an id, which is
       the entity-resolution failure that downstream retrieval will
-      experience as fragmented neighbourhoods.
+      experience as fragmented neighborhoods.
     * **Dangling endpoints**: a relationship references an id the
       extractor did not produce as an entity. The schema treats
       ``source`` and ``target`` as plain strings, so it cannot catch
       this on its own.
     * **Domain/range violations**: the relationship's source/target
-      types do not satisfy the ontology's constraints (for example
+      types do not satisfy the ontology's constraints (for example,
       ``ACQUIRED`` between a PERSON and an ORGANIZATION). This is the
       semantic check Chapter 7 explicitly says LLMs cannot perform from
       the prompt alone.
@@ -222,7 +227,8 @@ def validate_ontology(extraction: Extraction) -> dict:
                 "type":    r.type.value,
                 "source":  r.source,
                 "target":  r.target,
-                "missing": [x for x in (r.source, r.target) if x not in entity_types],
+                "missing": [x for x in (r.source, r.target)
+                            if x not in entity_types],
             })
             continue
 

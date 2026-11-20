@@ -74,7 +74,7 @@ Dependencies are declared per chapter, and the mechanism differs by chapter:
 | Chapter | How to install |
 |---------|----------------|
 | ch02, ch03, ch08, ch09, ch10 | `uv pip install -r requirements.txt` inside the chapter folder |
-| ch12 | No requirements file; `run_eval.sh` passes deps inline via `uv run --with openai --with neo4j --with python-dotenv --with pandas --with pydantic --with mcp` |
+| ch12 | No requirements file; `run_eval.sh` passes deps inline via `uv run --with openai --with neo4j --with python-dotenv --with pandas --with pydantic --with "mcp<2"` |
 | ch04 | No runtime dependencies beyond `pydantic` if you want to import `onto-as-pydantic.py`; the other files are ontology artifacts |
 
 A single shared virtual environment works for all chapters:
