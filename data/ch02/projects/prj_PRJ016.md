@@ -2,22 +2,33 @@
 
 ## Project Overview
 
-Intelligent automation of claims processing using AI, machine learning, and robotic process automation. This strategic initiative for NationWide Insurance aimed to transform their operations in the Insurance sector, leveraging cutting-edge technologies and methodologies to achieve significant business impact.
+Intelligent automation of claims processing using AI, machine learning, and
+robotic process automation. This strategic initiative for NationWide Insurance
+aimed to transform their operations in the Insurance sector, leveraging
+cutting-edge technologies and methodologies to achieve significant business
+impact.
 
 ## Client Profile
 
-NationWide Insurance is a leading organization in the Insurance industry that partnered with OMG Consulting to intelligent automation. The project was conducted between 2020-10-01 and 2021-08-31 with a budget of 2300000-3500000.
+NationWide Insurance is a leading organization in the Insurance industry that
+partnered with OMG Consulting to intelligent automation. The project was
+conducted between 2020-10-01 and 2021-08-31 with a budget of 2300000-3500000.
 
 ## Team Composition
 
-OMG Consulting deployed a cross-functional team of 4 consultants to execute this project.
+OMG Consulting deployed a cross-functional team of 4 consultants
+to execute this project.
 
 ### Key Team Members and Roles
 
-- **Project Lead**: Olivia Martinez (Supply Chain & Operations) - Process optimization, automation strategy, operational efficiency
-- **AI Implementation**: Emily Johnson (Conversational AI) - NLP development, document processing, conversational interfaces
-- **Data Science**: Sarah Johnson (Data Platforms & Analytics) - Predictive modeling, anomaly detection, algorithm development
-- **Development Lead**: Sarah Chen (Enterprise Applications) - Automation development, system integration, workflow implementation
+- **Project Lead**: Olivia Martinez (Supply Chain & Operations) - Process
+  optimization, automation strategy, operational efficiency
+- **AI Implementation**: Emily Johnson (Conversational AI) - NLP development,
+  document processing, conversational interfaces
+- **Data Science**: Sarah Johnson (Data Platforms & Analytics) - Predictive
+  modeling, anomaly detection, algorithm development
+- **Development Lead**: Sarah Chen (Enterprise Applications) - Automation
+  development, system integration, workflow implementation
 
 
 ## Technologies and Methodologies

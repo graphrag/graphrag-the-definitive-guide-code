@@ -7,9 +7,10 @@ import chromadb
 openai = OpenAI()
 openai.api_key = os.environ["OPENAI_API_KEY"]
 messages = [{"role": "developer", "content": """
-             You are a helpful assistant to help OMG consultants to determine consultant placement, 
-             you have information about the consultants, their skills, and project experience as well as
-             past project details, customers and their descriptions.
+             You are a helpful assistant to help OMG consultants to determine
+             consultant placement, you have information about the consultants,
+             their skills, and project experience as well as past project
+             details, customers and their descriptions.
              """}]
 
 @st.cache_resource
@@ -45,7 +46,8 @@ def generate_response(context, query):
     
     Answer:
     """
-    messages.append({"role": "user", "content": prompt.format(context=context, query=query)})
+    messages.append({"role": "user",
+                     "content": prompt.format(context=context, query=query)})
     response = openai.chat.completions.create(
         model="gpt-5.6",
         messages=messages,
@@ -58,7 +60,8 @@ def generate_response(context, query):
 # UI setup
 st.set_page_config(layout="wide")
 st.title("OMG Consulting Assistant")
-st.write("Ask questions about our consultants, their skills, and project experience")
+st.write("Ask questions about our consultants, their skills, "
+         "and project experience")
 
 # Load vector store
 with st.spinner("Loading knowledge base..."):
@@ -72,7 +75,8 @@ if query:
         query_embedding = generate_embedding(query)
         
         # Perform similarity search
-        search_results = similarity_search(vectorstore, query_embedding, top_k=3)
+        search_results = similarity_search(vectorstore, query_embedding,
+                                           top_k=3)
         
         # Assemble context from search results
         context = "\n\n".join(search_results)
